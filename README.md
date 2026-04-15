@@ -1,1 +1,3 @@
 # cookieClicker
+
+Thomas Gonda
