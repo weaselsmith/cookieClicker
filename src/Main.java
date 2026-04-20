@@ -1,6 +1,14 @@
 public class Main {
 
-    public static void main(String[] args){
-        System.out.println("This is a temporary print statement because git commit");
+    @Override
+    public void start(Stage stage) {
+        SceneManager.init(stage);
+        stage.setTitle("Todo App");
+        SceneManager.getInstance().navigateTo(SceneType.MAIN);
+        stage.show();
+    }
+    @Override
+    public void stop() {
+        DatabaseManager.getInstance().close();
     }
 }
