@@ -28,6 +28,7 @@ public class SceneFactory {
 
         return new Scene(new StackPane(btn), 640, 480);
     }
+
     private static Scene buildAddItemScene(Stage stage) {
 
         Button saveBtn = new Button("Save");
