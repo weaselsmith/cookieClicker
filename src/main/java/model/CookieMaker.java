@@ -5,7 +5,7 @@ public abstract class CookieMaker {
     private int lvl;
     private long num;
     private long priceForNext;
-    private long cookieRate;
+    private int cookieRate;
     private long cps;  // cps = cookies for second
 
     public CookieMaker() {
@@ -15,6 +15,10 @@ public abstract class CookieMaker {
 
     public void addMaker() {
         this.num++;
+    }
+
+    public void levelUp() {
+        this.lvl++;
     }
 
     private void updateCPS() {
@@ -33,7 +37,7 @@ public abstract class CookieMaker {
         return lvl;
     }
 
-    public int getNum() {
+    public long getNum() {
         return num;
     }
 
@@ -41,7 +45,7 @@ public abstract class CookieMaker {
         return priceForNext;
     }
 
-    public int getCps() {
+    public long getCps() {
         return cps;
     }
 }
