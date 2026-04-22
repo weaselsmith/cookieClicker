@@ -9,14 +9,26 @@ public class SceneFactory {
             case MAIN -> buildMainScene(stage);
             case DASHBOARD -> buildDashboardScene(stage);
             case ADD_ITEM -> buildAddItemScene(stage);
+            case COOKIE -> CookieScene.create(stage);
         };
     }
     private static Scene buildMainScene(Stage stage) {
-        Button loginBtn = new Button("Log In");
+        Button loginBtn = new Button("Switch to Cookie Scene");
         loginBtn.setOnAction(e ->
-                SceneManager.getInstance().navigateTo(SceneType.DASHBOARD)
+                SceneManager.getInstance().navigateTo(SceneType.COOKIE)
         );
         return new Scene(new StackPane(loginBtn), 640, 480);
+    }
+
+    private static Scene buildCookieScene(Stage stage) {
+        Button btn = new  Button("Currently on Cookie battle scene");
+        System.out.println("Hello!");
+
+        btn.setOnAction(e ->
+                SceneManager.getInstance().navigateTo(SceneType.MAIN)
+        );
+
+        return new Scene(new StackPane(btn), 640, 480);
     }
 
     private static Scene buildDashboardScene(Stage stage) {
