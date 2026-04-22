@@ -22,6 +22,12 @@ public class LoginScreenController {
 
         //TODO loginButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.{FIX THIS SPOT HERE}));)
         //TODO signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.{FIX THIS SPOT HERE}));)
+
+        //refresh();
+        //TODO wasn't sure if this is correct here or not
+
+        return new Scene(root, 640, 480);
+
     }
 
 }
