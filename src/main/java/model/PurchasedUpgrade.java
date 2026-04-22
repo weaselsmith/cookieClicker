@@ -1,4 +1,4 @@
-package com.yourapp.model;
+package model;
 
 public class PurchasedUpgrade {
     private int purchaseId;

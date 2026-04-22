@@ -1,3 +1,5 @@
+package model;
+
 public class Upgrade {
     private int upgradeId;
     private String name;
