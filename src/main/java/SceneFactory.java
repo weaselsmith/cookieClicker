@@ -4,14 +4,15 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class SceneFactory {
-    public static Scene create(SceneType type, Stage stage) {
+    public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
         return switch (type) {
-            case MAIN -> buildMainScene(stage);
-            case DASHBOARD -> buildDashboardScene(stage);
-            case ADD_ITEM -> buildAddItemScene(stage);
+            case MAIN -> buildMainScene(stage, db);
+            case DASHBOARD -> buildDashboardScene(stage, db);
+            case ADD_ITEM -> buildAddItemScene(stage, db);
+            case DB_TEST -> buildDBTestScene(stage, db);
         };
     }
-    private static Scene buildMainScene(Stage stage) {
+    private static Scene buildMainScene(Stage stage, DatabaseManager db) {
         Button loginBtn = new Button("Log In");
         loginBtn.setOnAction(e ->
                 SceneManager.getInstance().navigateTo(SceneType.DASHBOARD)
@@ -19,7 +20,7 @@ public class SceneFactory {
         return new Scene(new StackPane(loginBtn), 640, 480);
     }
 
-    private static Scene buildDashboardScene(Stage stage) {
+    private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
         Button btn = new Button("Dashboard");
 
         btn.setOnAction(e ->
@@ -29,7 +30,8 @@ public class SceneFactory {
         return new Scene(new StackPane(btn), 640, 480);
     }
 
-    private static Scene buildAddItemScene(Stage stage) {
+    private static Scene buildAddItemScene(Stage stage, DatabaseManager db) {
+
 
         Button saveBtn = new Button("Save");
 
@@ -38,5 +40,18 @@ public class SceneFactory {
         );
 
         return new Scene(new StackPane(saveBtn), 640, 480);
+    }
+
+    private static Scene buildDBTestScene(Stage stage, DatabaseManager db) {
+        Button testBtn = new Button("Test Database");
+
+        testBtn.setOnAction(e -> {
+            db.addUpgrade("Minty Cookie", 50);
+            db.addUpgrade("Mega Grandma", 1000);
+
+            SceneManager.getInstance().navigateTo(SceneType.DASHBOARD);
+        });
+
+        return new Scene(new StackPane(testBtn), 640, 480);
     }
 }
