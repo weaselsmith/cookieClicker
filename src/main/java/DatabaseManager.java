@@ -1,11 +1,12 @@
 import java.sql.*;
-<<<<<<< HEAD
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import model.Upgrade;
-=======
+import model.Game;
+import model.User;
+import model.PurchasedUpgrade;
 import java.util.*;
->>>>>>> df48b5d (insertion methods for each table)
 
 public class DatabaseManager {
 
@@ -110,7 +111,6 @@ public class DatabaseManager {
         }
     }
 
-<<<<<<< HEAD
     public List<Upgrade> getAllUpgrades() {
         List<Upgrade> upgrades = new ArrayList<>();
         String sql = "SELECT * FROM upgrades ORDER BY upgrade_id ASC";
@@ -160,21 +160,6 @@ public class DatabaseManager {
         }
     }
 
-    public void insertItem(String name) {
-        String sql = "INSERT INTO items (name) VALUES (?)";
-=======
-    public void addUser(String name) {
-        String sql = "INSERT INTO users (name) VALUES (?)";
->>>>>>> df48b5d (insertion methods for each table)
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, name);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("addUser failed: " + e.getMessage());
-        }
-    }
-
     public void addGame() {
         String sql = "INSERT INTO games DEFAULT VALUES";
 
@@ -185,55 +170,224 @@ public class DatabaseManager {
         }
     }
 
-    public void addPurchase(int game_id, int upgrade_id) {
-        String sql = "INSERT INTO purchased_upgrades (game_id, upgrade_id) VALUES (?, ?)";
+    public List<Game> getAllGames() {
+        List<Game> games = new ArrayList<>();
+        String sql = "SELECT * FROM games ORDER BY game_id ASC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Game game = new Game(
+                        rs.getInt("game_id"),
+                        rs.getInt("cookies"),
+                        rs.getInt("num_grandmas"),
+                        rs.getInt("num_factories"),
+                        rs.getInt("num_wizards"),
+                        rs.getInt("grandma_lvl"),
+                        rs.getInt("factory_lvl"),
+                        rs.getInt("wizards_lvl"),
+                        LocalDate.parse(rs.getString("last_login"))
+                );
+
+                games.add(game);
+            }
+        } catch (SQLException e) {
+            System.err.println("getAllGames failed: " + e.getMessage());
+        }
+
+        return games;
+    }
+
+    public void updateGame(Game game) {
+        String sql = "UPDATE games SET cookies = ?, num_grandmas = ?, num_factories = ?, " +
+                "num_wizards = ?, grandma_lvl = ?, factory_lvl = ?, wizards_lvl = ?, last_login = ? " +
+                "WHERE game_id = ?";
+
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, game_id);
-            pstmt.setInt(2, upgrade_id);
+            pstmt.setLong(1, game.getCookies());
+            pstmt.setInt(2, game.getNumGrandmas());
+            pstmt.setInt(3, game.getNumFactories());
+            pstmt.setInt(4, game.getNumWizards());
+            pstmt.setInt(5, game.getGrandmaLvl());
+            pstmt.setInt(6, game.getFactoryLvl());
+            pstmt.setInt(7, game.getWizardsLvl());
+            pstmt.setString(8, game.getLastLogin().toString());
+            pstmt.setInt(9, game.getGameId());
+
             pstmt.executeUpdate();
 
-            System.out.println("Added purchase of upgrade "+upgrade_id+" to game "+game_id);
+            System.out.println("Updated game with id: " + game.getGameId());
+        } catch (SQLException e) {
+            System.err.println("updateGame failed: " + e.getMessage());
+        }
+    }
+
+    public void deleteGame(int id) {
+        String sql = "DELETE FROM games WHERE game_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted game with id: " + id);
+        } catch (SQLException e) {
+            System.err.println("deleteGame failed: " + e.getMessage());
+        }
+    }
+
+    public void addUser(String name) {
+        String sql = "INSERT INTO users (name) VALUES (?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("addUser failed: " + e.getMessage());
+        }
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users ORDER BY id ASC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int curGameIdValue = rs.getInt("cur_game_id");
+                Integer curGameId = rs.wasNull() ? null : curGameIdValue;
+
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        curGameId,
+                        rs.getInt("high_score"),
+                        rs.getInt("max_grandmas"),
+                        rs.getInt("max_factories"),
+                        rs.getInt("max_wizards"),
+                        rs.getDouble("money")
+                );
+
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            System.err.println("getAllUsers failed: " + e.getMessage());
+        }
+
+        return users;
+    }
+
+    public void updateUser(User user) {
+        String sql = "UPDATE users SET name = ?, cur_game_id = ?, high_score = ?, max_grandmas = ?, " +
+                "max_factories = ?, max_wizards = ?, money = ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, user.getName());
+
+            if (user.getCurGameId() != null) {
+                pstmt.setInt(2, user.getCurGameId());
+            } else {
+                pstmt.setNull(2, Types.INTEGER);
+            }
+
+            pstmt.setInt(3, (int) user.getHighScore());
+            pstmt.setInt(4, user.getMaxGrandmas());
+            pstmt.setInt(5, user.getMaxFactories());
+            pstmt.setInt(6, user.getMaxWizards());
+            pstmt.setDouble(7, user.getMoney());
+            pstmt.setInt(8, user.getId());
+
+            pstmt.executeUpdate();
+
+            System.out.println("Updated user with id: " + user.getId());
+        } catch (SQLException e) {
+            System.err.println("updateUser failed: " + e.getMessage());
+        }
+    }
+
+    public void deleteUser(int id) {
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted user with id: " + id);
+        } catch (SQLException e) {
+            System.err.println("deleteUser failed: " + e.getMessage());
+        }
+    }
+
+    public void addPurchase(int userId, int gameId, int upgradeId, String name) {
+        String sql = "INSERT INTO purchased_upgrades (user_id, game_id, upgrade_id, name) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, gameId);
+            pstmt.setInt(3, upgradeId);
+            pstmt.setString(4, name);
+            pstmt.executeUpdate();
+
+            System.out.println("Added purchase of upgrade " + upgradeId + " for user " + userId + " in game " + gameId);
         } catch (SQLException e) {
             System.err.println("addPurchase failed: " + e.getMessage());
         }
     }
 
-    public List<String> getAllItems() {
-        List<String> items = new ArrayList<>();
-        String sql = "SELECT name FROM users ORDER BY created DESC";
+    public List<PurchasedUpgrade> getAllPurchasedUpgrades() {
+        List<PurchasedUpgrade> purchases = new ArrayList<>();
+        String sql = "SELECT * FROM purchased_upgrades ORDER BY purchase_id ASC";
 
-        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                items.add(rs.getString("name"));
+                PurchasedUpgrade purchase = new PurchasedUpgrade(
+                        rs.getInt("purchase_id"),
+                        rs.getInt("user_id"),
+                        rs.getInt("game_id"),
+                        rs.getInt("upgrade_id"),
+                        rs.getString("name")
+                );
+
+                purchases.add(purchase);
             }
-
         } catch (SQLException e) {
-            System.err.println("getAllItems failed: " + e.getMessage());
+            System.err.println("getAllPurchasedUpgrades failed: " + e.getMessage());
         }
 
-        return items;
+        return purchases;
     }
 
-    public void markDone(int id) {
-        String sql = "UPDATE items SET done = 1 WHERE id = ?";
+    public void updatePurchasedUpgrade(PurchasedUpgrade purchase) {
+        String sql = "UPDATE purchased_upgrades SET user_id = ?, game_id = ?, upgrade_id = ?, name = ? WHERE purchase_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, purchase.getUserId());
+            pstmt.setInt(2, purchase.getGameId());
+            pstmt.setInt(3, purchase.getUpgradeId());
+            pstmt.setString(4, purchase.getName());
+            pstmt.setInt(5, purchase.getPurchaseId());
+
             pstmt.executeUpdate();
+
+            System.out.println("Updated purchased upgrade with id: " + purchase.getPurchaseId());
         } catch (SQLException e) {
-            System.err.println("markDone failed: " + e.getMessage());
+            System.err.println("updatePurchasedUpgrade failed: " + e.getMessage());
         }
     }
 
-    public void deleteItem(int id) {
-        String sql = "DELETE FROM items WHERE id = ?";
+    public void deletePurchasedUpgrade(int purchaseId) {
+        String sql = "DELETE FROM purchased_upgrades WHERE purchase_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, purchaseId);
             pstmt.executeUpdate();
+
+            System.out.println("Deleted purchased upgrade with id: " + purchaseId);
         } catch (SQLException e) {
-            System.err.println("deleteItem failed: " + e.getMessage());
+            System.err.println("deletePurchasedUpgrade failed: " + e.getMessage());
         }
     }
 

@@ -1,5 +1,6 @@
 import model.Game;
 import model.Upgrade;
+import model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
@@ -54,9 +55,9 @@ class DatabaseManagerTest {
 
     @Test
     void addGame() {
-        //WIP: bug with localdate on last_login here
-        db.addGame();
-
+        db.addUser("Tom");
+        List<User> users = db.getAllUsers();
+        db.addGame(users.getFirst().getId());
         List<Game> games = db.getAllGames();
 
         assertEquals(1, games.size());
