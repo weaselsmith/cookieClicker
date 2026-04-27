@@ -1,3 +1,4 @@
+import model.Upgrade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
@@ -38,6 +39,12 @@ class DatabaseManagerTest {
 
     @Test
     void addUpgrade() {
+        db.addUpgrade("Test Upgrade", 100);
+
+        List<Upgrade> upgrades = db.getAllUpgrades();
+
+        assertEquals(1, upgrades.size());
+        assertEquals("Test Upgrade", upgrades.get(0).getName());
     }
 
     @Test
