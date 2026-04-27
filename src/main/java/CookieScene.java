@@ -1,4 +1,4 @@
-import javafx.geometry.Pos; //?
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class CookieScene {
 
-    private static int count = 0; // belongs to this scene
+    private static int count = 0;
 
     public static Scene create(Stage stage) {
         Text counterText = new Text("Score: 0");
