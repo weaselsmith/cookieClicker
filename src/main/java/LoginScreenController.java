@@ -2,6 +2,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 public class LoginScreenController {
 
@@ -11,18 +12,24 @@ public class LoginScreenController {
     public Scene buildScene(){
         Label title = new Label("Login Page");
         TextField usernameField = new TextField();
-
+        Label usernameLabel = new Label("Username:");
         String inputtedUsername;
 
         PasswordField passwordField = new PasswordField();
-
+        Label passwordLabel = new Label("Password:");
         String inputtedPassword;
+
+        HBox usernameRow = new HBox(10, usernameLabel, usernameField);
+        HBox passwordRow = new HBox(10, passwordLabel, passwordField);
 
         Button loginButton = new Button("Login!");
         TextArea newUser = new TextArea("New user? Sign up below!");
         Button signUp = new Button("Sign up!");
 
-        VBox root = new VBox(10, title, usernameField, passwordField, loginButton, newUser, signUp);
+        usernameField.setPromptText("Type username here");
+        passwordField.setPromptText("******");
+
+        VBox root = new VBox(10, title, usernameRow, passwordRow, loginButton, newUser, signUp);
         root.setPadding(new Insets(16));
 
         //TODO loginButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.{FIX THIS SPOT HERE}));)
