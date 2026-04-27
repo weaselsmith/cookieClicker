@@ -126,7 +126,7 @@ public class DatabaseManager {
     }
 
     public void addPurchase(int game_id, int upgrade_id) {
-        String sql = "INSERT INTO upgrades (game_id, upgrade_id) VALUES (?, ?)";
+        String sql = "INSERT INTO purchased_upgrades (game_id, upgrade_id) VALUES (?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, game_id);
             pstmt.setInt(2, upgrade_id);
