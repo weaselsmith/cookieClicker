@@ -110,6 +110,19 @@ public class DatabaseManager {
         }
     }
 
+    public void clearUpgrades() {
+        String sql = "DELETE FROM upgrades";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Upgrades table cleared");
+        } catch (SQLException e) {
+            System.err.println("clearUpgrades failed: " + e.getMessage());
+        }
+    }
+
+
+
     public List<Upgrade> getAllUpgrades() {
         List<Upgrade> upgrades = new ArrayList<>();
         String sql = "SELECT * FROM upgrades ORDER BY upgrade_id ASC";
