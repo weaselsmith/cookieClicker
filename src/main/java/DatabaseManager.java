@@ -1,11 +1,10 @@
 import java.sql.*;
-<<<<<<< HEAD
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import model.Upgrade;
-=======
+import model.Game;
 import java.util.*;
->>>>>>> df48b5d (insertion methods for each table)
 
 public class DatabaseManager {
 
@@ -110,7 +109,6 @@ public class DatabaseManager {
         }
     }
 
-<<<<<<< HEAD
     public List<Upgrade> getAllUpgrades() {
         List<Upgrade> upgrades = new ArrayList<>();
         String sql = "SELECT * FROM upgrades ORDER BY upgrade_id ASC";
@@ -160,21 +158,6 @@ public class DatabaseManager {
         }
     }
 
-    public void insertItem(String name) {
-        String sql = "INSERT INTO items (name) VALUES (?)";
-=======
-    public void addUser(String name) {
-        String sql = "INSERT INTO users (name) VALUES (?)";
->>>>>>> df48b5d (insertion methods for each table)
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, name);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("addUser failed: " + e.getMessage());
-        }
-    }
-
     public void addGame() {
         String sql = "INSERT INTO games DEFAULT VALUES";
 
@@ -182,6 +165,83 @@ public class DatabaseManager {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("addGame failed: " + e.getMessage());
+        }
+    }
+
+    public List<Game> getAllGames() {
+        List<Game> games = new ArrayList<>();
+        String sql = "SELECT * FROM games ORDER BY game_id ASC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Game game = new Game(
+                        rs.getInt("game_id"),
+                        rs.getInt("cookies"),
+                        rs.getInt("num_grandmas"),
+                        rs.getInt("num_factories"),
+                        rs.getInt("num_wizards"),
+                        rs.getInt("grandma_lvl"),
+                        rs.getInt("factory_lvl"),
+                        rs.getInt("wizards_lvl"),
+                        LocalDate.parse(rs.getString("last_login"))
+                );
+
+                games.add(game);
+            }
+        } catch (SQLException e) {
+            System.err.println("getAllGames failed: " + e.getMessage());
+        }
+
+        return games;
+    }
+
+    public void updateGame(Game game) {
+        String sql = "UPDATE games SET cookies = ?, num_grandmas = ?, num_factories = ?, " +
+                "num_wizards = ?, grandma_lvl = ?, factory_lvl = ?, wizards_lvl = ?, last_login = ? " +
+                "WHERE game_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setLong(1, game.getCookies());
+            pstmt.setInt(2, game.getNumGrandmas());
+            pstmt.setInt(3, game.getNumFactories());
+            pstmt.setInt(4, game.getNumWizards());
+            pstmt.setInt(5, game.getGrandmaLvl());
+            pstmt.setInt(6, game.getFactoryLvl());
+            pstmt.setInt(7, game.getWizardsLvl());
+            pstmt.setString(8, game.getLastLogin());
+            pstmt.setInt(9, game.getGameId());
+
+            pstmt.executeUpdate();
+
+            System.out.println("Updated game with id: " + game.getGameId());
+        } catch (SQLException e) {
+            System.err.println("updateGame failed: " + e.getMessage());
+        }
+    }
+
+    public void deleteGame(int id) {
+        String sql = "DELETE FROM games WHERE game_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted game with id: " + id);
+        } catch (SQLException e) {
+            System.err.println("deleteGame failed: " + e.getMessage());
+        }
+    }
+
+    public void addUser(String name) {
+        String sql = "INSERT INTO users (name) VALUES (?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("addUser failed: " + e.getMessage());
         }
     }
 
@@ -195,45 +255,6 @@ public class DatabaseManager {
             System.out.println("Added purchase of upgrade "+upgrade_id+" to game "+game_id);
         } catch (SQLException e) {
             System.err.println("addPurchase failed: " + e.getMessage());
-        }
-    }
-
-    public List<String> getAllItems() {
-        List<String> items = new ArrayList<>();
-        String sql = "SELECT name FROM users ORDER BY created DESC";
-
-        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                items.add(rs.getString("name"));
-            }
-
-        } catch (SQLException e) {
-            System.err.println("getAllItems failed: " + e.getMessage());
-        }
-
-        return items;
-    }
-
-    public void markDone(int id) {
-        String sql = "UPDATE items SET done = 1 WHERE id = ?";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("markDone failed: " + e.getMessage());
-        }
-    }
-
-    public void deleteItem(int id) {
-        String sql = "DELETE FROM items WHERE id = ?";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("deleteItem failed: " + e.getMessage());
         }
     }
 
