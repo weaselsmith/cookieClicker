@@ -1,7 +1,9 @@
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import model.Upgrade;
+import model.Game;
 
 public class DatabaseManager {
 
@@ -156,6 +158,72 @@ public class DatabaseManager {
             System.out.println("Deleted upgrade with id: " + id);
         } catch (SQLException e) {
             System.err.println("deleteUpgrade failed: " + e.getMessage());
+        }
+    }
+
+    public List<Game> getAllGames() {
+        List<Game> games = new ArrayList<>();
+        String sql = "SELECT * FROM games ORDER BY game_id ASC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Game game = new Game(
+                        rs.getInt("game_id"),
+                        rs.getInt("cookies"),
+                        rs.getInt("num_grandmas"),
+                        rs.getInt("num_factories"),
+                        rs.getInt("num_wizards"),
+                        rs.getInt("grandma_lvl"),
+                        rs.getInt("factory_lvl"),
+                        rs.getInt("wizards_lvl"),
+                        LocalDate.parse(rs.getString("last_login"))
+                );
+
+                games.add(game);
+            }
+        } catch (SQLException e) {
+            System.err.println("getAllGames failed: " + e.getMessage());
+        }
+
+        return games;
+    }
+
+    public void updateGame(Game game) {
+        String sql = "UPDATE games SET cookies = ?, num_grandmas = ?, num_factories = ?, " +
+                "num_wizards = ?, grandma_lvl = ?, factory_lvl = ?, wizards_lvl = ?, last_login = ? " +
+                "WHERE game_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setLong(1, game.getCookies());
+            pstmt.setInt(2, game.getNumGrandmas());
+            pstmt.setInt(3, game.getNumFactories());
+            pstmt.setInt(4, game.getNumWizards());
+            pstmt.setInt(5, game.getGrandmaLvl());
+            pstmt.setInt(6, game.getFactoryLvl());
+            pstmt.setInt(7, game.getWizardsLvl());
+            pstmt.setString(8, game.getLastLogin());
+            pstmt.setInt(9, game.getGameId());
+
+            pstmt.executeUpdate();
+
+            System.out.println("Updated game with id: " + game.getGameId());
+        } catch (SQLException e) {
+            System.err.println("updateGame failed: " + e.getMessage());
+        }
+    }
+
+    public void deleteGame(int id) {
+        String sql = "DELETE FROM games WHERE game_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted game with id: " + id);
+        } catch (SQLException e) {
+            System.err.println("deleteGame failed: " + e.getMessage());
         }
     }
 
