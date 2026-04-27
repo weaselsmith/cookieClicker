@@ -236,4 +236,15 @@ public class DatabaseManager {
             System.err.println("deleteItem failed: " + e.getMessage());
         }
     }
+
+    public boolean tableExists(Connection conn, String tableName) {
+        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name=?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, tableName);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            System.err.println("table "+tableName+" does not exist");
+        }
+    }
 }
