@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Upgrade;
 import model.Game;
+import model.User;
 import java.util.*;
 
 public class DatabaseManager {
@@ -242,6 +243,78 @@ public class DatabaseManager {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("addUser failed: " + e.getMessage());
+        }
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users ORDER BY id ASC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int curGameIdValue = rs.getInt("cur_game_id");
+                Integer curGameId = rs.wasNull() ? null : curGameIdValue;
+
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        curGameId,
+                        rs.getInt("high_score"),
+                        rs.getInt("max_grandmas"),
+                        rs.getInt("max_factories"),
+                        rs.getInt("max_wizards"),
+                        rs.getDouble("money")
+                );
+
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            System.err.println("getAllUsers failed: " + e.getMessage());
+        }
+
+        return users;
+    }
+
+    public void updateUser(User user) {
+        String sql = "UPDATE users SET name = ?, cur_game_id = ?, high_score = ?, max_grandmas = ?, " +
+                "max_factories = ?, max_wizards = ?, money = ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, user.getName());
+
+            if (user.getCurGameId() != null) {
+                pstmt.setInt(2, user.getCurGameId());
+            } else {
+                pstmt.setNull(2, Types.INTEGER);
+            }
+
+            pstmt.setInt(3, (int) user.getHighScore());
+            pstmt.setInt(4, user.getMaxGrandmas());
+            pstmt.setInt(5, user.getMaxFactories());
+            pstmt.setInt(6, user.getMaxWizards());
+            pstmt.setDouble(7, user.getMoney());
+            pstmt.setInt(8, user.getId());
+
+            pstmt.executeUpdate();
+
+            System.out.println("Updated user with id: " + user.getId());
+        } catch (SQLException e) {
+            System.err.println("updateUser failed: " + e.getMessage());
+        }
+    }
+
+    public void deleteUser(int id) {
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted user with id: " + id);
+        } catch (SQLException e) {
+            System.err.println("deleteUser failed: " + e.getMessage());
         }
     }
 
