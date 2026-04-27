@@ -3,6 +3,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 import javafx.geometry.Pos;
@@ -18,7 +19,6 @@ public class SceneFactory {
             case DASHBOARD -> buildDashboardScene(stage, db);
             case ADD_ITEM -> buildAddItemScene(stage, db);
             case DB_TEST -> buildDBTestScene(stage, db);
-            case COOKIE -> buildCookieScene(stage, db);
         };
     }
 
@@ -27,31 +27,30 @@ public class SceneFactory {
         loginBtn.setOnAction(e ->
                 SceneManager.getInstance().navigateTo(SceneType.DASHBOARD)
         );
+
         return new Scene(new StackPane(loginBtn), 640, 480);
     }
 
-    private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
+    private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
         Button btn = new Button("Dashboard");
+        Button cookiekBtn = new Button("Navigate to Cookie Scene");
 
         btn.setOnAction(e ->
                 SceneManager.getInstance().navigateTo(SceneType.ADD_ITEM)
         );
 
-        return new Scene(new StackPane(btn), 640, 480);
-    }
-
-    private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
-        Button btn = new Button("Dashboard");
-
-        btn.setOnAction(e ->
-                SceneManager.getInstance().navigateTo(SceneType.COOKIE)
+        cookiekBtn.setOnAction(e ->
+                stage.setScene(CookieScene.create(stage))
         );
 
-        return new Scene(new StackPane(btn), 640, 480);
+        VBox vBox = new VBox(10);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(btn, cookiekBtn);
+
+        return new Scene(vBox, 640, 480);
     }
 
     private static Scene buildAddItemScene(Stage stage, DatabaseManager db) {
-
 
         Button saveBtn = new Button("Save");
 
@@ -129,4 +128,6 @@ public class SceneFactory {
 
         return new Scene(layout, 640, 480);
     }
+
+
 }
