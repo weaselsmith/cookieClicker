@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class DatabaseManager {
         String createGamesTable = """
                 CREATE TABLE IF NOT EXISTS games (
                     game_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
                     cookies INTEGER NOT NULL DEFAULT 0,
                     num_grandmas INTEGER NOT NULL DEFAULT 0,
                     num_factories INTEGER NOT NULL DEFAULT 0,
@@ -50,7 +52,8 @@ public class DatabaseManager {
                     grandma_lvl INTEGER NOT NULL DEFAULT 1,
                     factory_lvl INTEGER NOT NULL DEFAULT 1,
                     wizards_lvl INTEGER NOT NULL DEFAULT 1,
-                    last_login TEXT
+                    last_login DATE DEFAULT CURRENT_DATE,
+                    FOREIGN KEY (user_id) REFERENCES users(id)
                 )
                 """;
 
@@ -58,12 +61,10 @@ public class DatabaseManager {
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
-                    cur_game_id INTEGER,
                     high_score INTEGER NOT NULL DEFAULT 0,
                     max_grandmas INTEGER NOT NULL DEFAULT 0,
                     max_factories INTEGER NOT NULL DEFAULT 0,
-                    max_wizards INTEGER NOT NULL DEFAULT 0,
-                    FOREIGN KEY (cur_game_id) REFERENCES games(game_id)
+                    max_wizards INTEGER NOT NULL DEFAULT 0
                 )
                 """;
 
@@ -160,11 +161,13 @@ public class DatabaseManager {
         }
     }
 
-    public void addGame() {
-        String sql = "INSERT INTO games DEFAULT VALUES";
+    public void addGame(int userId) {
+        String sql = "INSERT INTO games (user_id) VALUES (?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
             pstmt.executeUpdate();
+            System.out.println("Added game for user_id: " + userId);
         } catch (SQLException e) {
             System.err.println("addGame failed: " + e.getMessage());
         }
@@ -212,7 +215,7 @@ public class DatabaseManager {
             pstmt.setInt(5, game.getGrandmaLvl());
             pstmt.setInt(6, game.getFactoryLvl());
             pstmt.setInt(7, game.getWizardsLvl());
-            pstmt.setString(8, game.getLastLogin().toString());
+            pstmt.setDate(8, Date.valueOf(game.getLastLogin()));
             pstmt.setInt(9, game.getGameId());
 
             pstmt.executeUpdate();
@@ -255,18 +258,13 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                int curGameIdValue = rs.getInt("cur_game_id");
-                Integer curGameId = rs.wasNull() ? null : curGameIdValue;
-
                 User user = new User(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        curGameId,
                         rs.getInt("high_score"),
                         rs.getInt("max_grandmas"),
                         rs.getInt("max_factories"),
-                        rs.getInt("max_wizards"),
-                        rs.getDouble("money")
+                        rs.getInt("max_wizards")
                 );
 
                 users.add(user);
@@ -279,24 +277,16 @@ public class DatabaseManager {
     }
 
     public void updateUser(User user) {
-        String sql = "UPDATE users SET name = ?, cur_game_id = ?, high_score = ?, max_grandmas = ?, " +
-                "max_factories = ?, max_wizards = ?, money = ? WHERE id = ?";
+        String sql = "UPDATE users SET name = ?, high_score = ?, max_grandmas = ?, " +
+                "max_factories = ?, max_wizards = ? WHERE id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, user.getName());
-
-            if (user.getCurGameId() != null) {
-                pstmt.setInt(2, user.getCurGameId());
-            } else {
-                pstmt.setNull(2, Types.INTEGER);
-            }
-
-            pstmt.setInt(3, (int) user.getHighScore());
-            pstmt.setInt(4, user.getMaxGrandmas());
-            pstmt.setInt(5, user.getMaxFactories());
-            pstmt.setInt(6, user.getMaxWizards());
-            pstmt.setDouble(7, user.getMoney());
-            pstmt.setInt(8, user.getId());
+            pstmt.setInt(2, (int) user.getHighScore());
+            pstmt.setInt(3, user.getMaxGrandmas());
+            pstmt.setInt(4, user.getMaxFactories());
+            pstmt.setInt(5, user.getMaxWizards());
+            pstmt.setInt(6, user.getId());
 
             pstmt.executeUpdate();
 
@@ -319,17 +309,16 @@ public class DatabaseManager {
         }
     }
 
-    public void addPurchase(int userId, int gameId, int upgradeId, String name) {
-        String sql = "INSERT INTO purchased_upgrades (user_id, game_id, upgrade_id, name) VALUES (?, ?, ?, ?)";
+    public void addPurchase(int gameId, int upgradeId, String name) {
+        String sql = "INSERT INTO purchased_upgrades (game_id, upgrade_id, name) VALUES (?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, userId);
-            pstmt.setInt(2, gameId);
-            pstmt.setInt(3, upgradeId);
-            pstmt.setString(4, name);
+            pstmt.setInt(1, gameId);
+            pstmt.setInt(2, upgradeId);
+            pstmt.setString(3, name);
             pstmt.executeUpdate();
 
-            System.out.println("Added purchase of upgrade " + upgradeId + " for user " + userId + " in game " + gameId);
+            System.out.println("Added purchase of upgrade " + upgradeId + " in game " + gameId);
         } catch (SQLException e) {
             System.err.println("addPurchase failed: " + e.getMessage());
         }
@@ -345,7 +334,6 @@ public class DatabaseManager {
             while (rs.next()) {
                 PurchasedUpgrade purchase = new PurchasedUpgrade(
                         rs.getInt("purchase_id"),
-                        rs.getInt("user_id"),
                         rs.getInt("game_id"),
                         rs.getInt("upgrade_id"),
                         rs.getString("name")
@@ -361,14 +349,13 @@ public class DatabaseManager {
     }
 
     public void updatePurchasedUpgrade(PurchasedUpgrade purchase) {
-        String sql = "UPDATE purchased_upgrades SET user_id = ?, game_id = ?, upgrade_id = ?, name = ? WHERE purchase_id = ?";
+        String sql = "UPDATE purchased_upgrades SET game_id = ?, upgrade_id = ?, name = ? WHERE purchase_id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, purchase.getUserId());
-            pstmt.setInt(2, purchase.getGameId());
-            pstmt.setInt(3, purchase.getUpgradeId());
-            pstmt.setString(4, purchase.getName());
-            pstmt.setInt(5, purchase.getPurchaseId());
+            pstmt.setInt(1, purchase.getGameId());
+            pstmt.setInt(2, purchase.getUpgradeId());
+            pstmt.setString(3, purchase.getName());
+            pstmt.setInt(4, purchase.getPurchaseId());
 
             pstmt.executeUpdate();
 

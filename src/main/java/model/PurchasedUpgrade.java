@@ -2,7 +2,6 @@ package model;
 
 public class PurchasedUpgrade {
     private int purchaseId;
-    private int userId;
     private int gameId;
     private int upgradeId;
     private String name;
@@ -10,9 +9,8 @@ public class PurchasedUpgrade {
     public PurchasedUpgrade() {
     }
 
-    public PurchasedUpgrade(int purchaseId, int userId, int gameId, int upgradeId, String name) {
+    public PurchasedUpgrade(int purchaseId, int gameId, int upgradeId, String name) {
         this.purchaseId = purchaseId;
-        this.userId = userId;
         this.gameId = gameId;
         this.upgradeId = upgradeId;
         this.name = name;
@@ -24,14 +22,6 @@ public class PurchasedUpgrade {
 
     public void setPurchaseId(int purchaseId) {
         this.purchaseId = purchaseId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public int getGameId() {
