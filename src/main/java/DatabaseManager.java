@@ -212,7 +212,7 @@ public class DatabaseManager {
             pstmt.setInt(5, game.getGrandmaLvl());
             pstmt.setInt(6, game.getFactoryLvl());
             pstmt.setInt(7, game.getWizardsLvl());
-            pstmt.setString(8, game.getLastLogin());
+            pstmt.setString(8, game.getLastLogin().toString());
             pstmt.setInt(9, game.getGameId());
 
             pstmt.executeUpdate();
