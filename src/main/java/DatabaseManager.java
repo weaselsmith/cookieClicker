@@ -1,6 +1,5 @@
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class DatabaseManager {
 
@@ -57,7 +56,6 @@ public class DatabaseManager {
                     max_grandmas INTEGER NOT NULL DEFAULT 0,
                     max_factories INTEGER NOT NULL DEFAULT 0,
                     max_wizards INTEGER NOT NULL DEFAULT 0,
-                    money REAL NOT NULL DEFAULT 0.0,
                     FOREIGN KEY (cur_game_id) REFERENCES games(game_id)
                 )
                 """;
@@ -73,11 +71,8 @@ public class DatabaseManager {
         String createPurchasedUpgradesTable = """
                 CREATE TABLE IF NOT EXISTS purchased_upgrades (
                         purchase_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        user_id INTEGER NOT NULL,
                         game_id INTEGER NOT NULL,
                         upgrade_id INTEGER NOT NULL,
-                        name TEXT NOT NULL,
-                        FOREIGN KEY (user_id) REFERENCES users(id),
                         FOREIGN KEY (game_id) REFERENCES games(game_id),
                         FOREIGN KEY (upgrade_id) REFERENCES upgrades(upgrade_id)
                     )
@@ -109,14 +104,37 @@ public class DatabaseManager {
         }
     }
 
-    public void insertItem(String name) {
-        String sql = "INSERT INTO items (name) VALUES (?)";
+    public void addUser(String name) {
+        String sql = "INSERT INTO users (name) VALUES (?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, name);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("insertItem failed: " + e.getMessage());
+            System.err.println("addUser failed: " + e.getMessage());
+        }
+    }
+
+    public void addGame() {
+        String sql = "INSERT INTO games DEFAULT VALUES";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("addGame failed: " + e.getMessage());
+        }
+    }
+
+    public void addPurchase(int game_id, int upgrade_id) {
+        String sql = "INSERT INTO upgrades (game_id, upgrade_id) VALUES (?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, game_id);
+            pstmt.setInt(2, upgrade_id);
+            pstmt.executeUpdate();
+
+            System.out.println("Added purchase of upgrade "+upgrade_id+" to game "+game_id);
+        } catch (SQLException e) {
+            System.err.println("addPurchase failed: " + e.getMessage());
         }
     }
 
