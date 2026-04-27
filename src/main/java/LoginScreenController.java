@@ -11,7 +11,13 @@ public class LoginScreenController {
     public Scene buildScene(){
         Label title = new Label("Login Page");
         TextField usernameField = new TextField();
+
+        String inputtedUsername;
+
         PasswordField passwordField = new PasswordField();
+
+        String inputtedPassword;
+
         Button loginButton = new Button("Login!");
         TextArea newUser = new TextArea("New user? Sign up below!");
         Button signUp = new Button("Sign up!");
@@ -27,6 +33,16 @@ public class LoginScreenController {
 
         return new Scene(root, 640, 480);
 
+    }
+
+    public boolean isValidInput(String username, String password) {
+        if (username == null || username.trim().isEmpty()){
+            return false;
+        }
+        if (password == null || password.length() < 6){
+            return false;
+        }
+        return true;
     }
 
 }
