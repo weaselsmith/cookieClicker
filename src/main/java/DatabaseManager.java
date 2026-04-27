@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.Upgrade;
 
 public class DatabaseManager {
 
@@ -106,6 +107,55 @@ public class DatabaseManager {
             System.out.println("Added upgrade, name: " + name + ", cost: " + cost);
         } catch (SQLException e) {
             System.err.println("addUpgrade failed: " + e.getMessage());
+        }
+    }
+
+    public List<Upgrade> getAllUpgrades() {
+        List<Upgrade> upgrades = new ArrayList<>();
+        String sql = "SELECT * FROM upgrades ORDER BY upgrade_id ASC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Upgrade upgrade = new Upgrade(
+                        rs.getInt("upgrade_id"),
+                        rs.getString("name"),
+                        rs.getInt("cost")
+                );
+                upgrades.add(upgrade);
+            }
+        } catch (SQLException e) {
+            System.err.println("getAllUpgrades failed: " + e.getMessage());
+        }
+
+        return upgrades;
+    }
+
+    public void updateUpgradePrice(int upgradeId, int newCost) {
+        String sql = "UPDATE upgrades SET cost = ? WHERE upgrade_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, newCost);
+            pstmt.setInt(2, upgradeId);
+            pstmt.executeUpdate();
+
+            System.out.println("Updated upgrade " + upgradeId + " to new cost: " + newCost);
+        } catch (SQLException e) {
+            System.err.println("updatePrice failed: " + e.getMessage());
+        }
+    }
+
+    public void deleteUpgrade(int id) {
+        String sql = "DELETE FROM upgrades WHERE upgrade_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+            System.out.println("Deleted upgrade with id: " + id);
+        } catch (SQLException e) {
+            System.err.println("deleteUpgrade failed: " + e.getMessage());
         }
     }
 
