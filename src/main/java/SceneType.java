@@ -2,5 +2,5 @@ public enum SceneType {
     MAIN,
     DASHBOARD,
     ADD_ITEM,
-    COOKIE
+    DB_TEST
 }
