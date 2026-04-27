@@ -186,5 +186,6 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println("table "+tableName+" does not exist");
         }
+        return false;
     }
 }
