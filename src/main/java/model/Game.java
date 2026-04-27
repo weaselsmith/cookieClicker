@@ -94,7 +94,7 @@ public class Game {
         this.wizardsLvl = wizardsLvl;
     }
 
-    public LocalDate getLastLogin() {
+    public String getLastLogin() {
         return lastLogin;
     }
 
