@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
+import model.Game;
 
 import java.awt.*;
 
@@ -27,6 +28,7 @@ public class CookieScene {
         cookieButton.setGraphic(cookieView);
         cookieButton.setStyle("-fx-background-color: transparent;");
         cookieButton.setOnAction(e -> {
+            //db.updateGame();
             counterText.setText("Score: " + ++count);
         });
 
