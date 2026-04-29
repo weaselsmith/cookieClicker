@@ -17,9 +17,6 @@ public class CookieScene {
 
     public static Scene create(Stage stage) {
         Text counterText = new Text("Score: 0");
-//        Button plusOne = new Button("+1");
-//        Button plusTen = new Button("+10");
-//        Button timesTwo = new Button("X2");
 
         Image cookie = new Image(CookieScene.class.getResource("/images/cookie_1.jfif").toExternalForm());
         ImageView cookieView = new ImageView(cookie);
@@ -34,27 +31,11 @@ public class CookieScene {
         });
 
 
-//        plusOne.setOnAction(e -> {
-//            count++;
-//            counterText.setText("Score: " + count);
-//        });
-//
-//        plusTen.setOnAction(e -> {
-//            count+=10;
-//            counterText.setText("Score: " + count);
-//        });
-//
-//        timesTwo.setOnAction(e -> {
-//            count*=2;
-//            counterText.setText("Score: " + count);
-//        });
-
         VBox root = new VBox(10);
         HBox hBox = new HBox(10);
         root.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
 
-//        hBox.getChildren().addAll(plusOne, plusTen, timesTwo);
         root.getChildren().addAll(cookieButton, counterText, hBox);
 
         return new Scene(root, 640, 480);
