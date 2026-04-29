@@ -8,5 +8,4 @@ public class Grandmas extends CookieMaker {
         name = "grandma";
         updateCPS();
     }
-
 }
