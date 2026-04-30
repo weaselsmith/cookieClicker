@@ -1,31 +1,34 @@
-package model;
+package makers;
 
 public abstract class CookieMaker {
-    private String name;
-    private int lvl;
-    private long num;
-    private long priceForNext;
-    private int cookieRate;
-    private long cps;  // cps = cookies for second
+    protected String name;
+    protected int lvl;
+    protected long num;
+    protected long priceForNext;
+    protected int cookieRate;
+    protected long cps;  // cps = cookies for second
 
     public CookieMaker() {
         this.lvl = 1;
         this.num = 0;
     }
 
-    public void addMaker() {
+    public void add() {
         this.num++;
+        updatePrice();
+        updateCPS();
     }
 
     public void levelUp() {
         this.lvl++;
+        updateCPS();
     }
 
-    private void updateCPS() {
+    protected void updateCPS() {
         cps = cookieRate * lvl * num;
     }
 
-    private void updatePrice() {
+    protected void updatePrice() {
         priceForNext = (long) Math.floor(priceForNext * 1.5);
     }
 
