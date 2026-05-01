@@ -17,6 +17,10 @@ public class CookieScene {
     private static int count = 0;
 
     public static Scene create(Stage stage) {
+        Button backButton = new Button("Back to Dashboard");
+        backButton.setOnAction(e -> {
+            SceneManager.getInstance().navigateTo(SceneType.DASHBOARD);
+        });
         Text counterText = new Text("Score: 0");
 
         Image cookie = new Image(CookieScene.class.getResource("/images/cookie_1.jfif").toExternalForm());
@@ -38,7 +42,7 @@ public class CookieScene {
         root.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
 
-        root.getChildren().addAll(cookieButton, counterText, hBox);
+        root.getChildren().addAll(backButton, cookieButton, counterText, hBox);
 
         return new Scene(root, 640, 480);
     }

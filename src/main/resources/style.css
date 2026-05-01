@@ -1,0 +1,5 @@
+.hbox-bordered {
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-padding: 10;
+}
