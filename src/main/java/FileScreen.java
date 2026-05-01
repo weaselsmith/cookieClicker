@@ -2,6 +2,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,11 @@ public class FileScreen {
 
 
     public static Scene create(Stage stage){
+        Button backButton = new Button("Back to LOGIN");
+        backButton.setOnAction(e -> {
+            SceneManager.getInstance().navigateTo(SceneType.MAIN);
+        });
+
 
         Text text1 = new Text("File 1");
         Text text2 = new Text("File 2");
@@ -52,7 +58,7 @@ public class FileScreen {
 
 
 
-        root.getChildren().addAll(file1,file2,file3);
+        root.getChildren().addAll(backButton, file1,file2,file3);
         return new Scene(root, 640, 480);
     }
 
