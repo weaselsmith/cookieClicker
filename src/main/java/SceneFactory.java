@@ -15,6 +15,7 @@ import model.Upgrade;
 import java.util.List;
 
 public class SceneFactory {
+
     public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
         return switch (type) {
             case LOGIN -> buildLoginScene(stage, db);
@@ -79,6 +80,7 @@ public class SceneFactory {
     private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
         Button btn = new Button("Dashboard");
         Button cookiekBtn = new Button("Navigate to Cookie Scene");
+        Button fileBtn = new Button("Navigate to File Screen");
 
         btn.setOnAction(e ->
                 SceneManager.getInstance().navigateTo(SceneType.ADD_ITEM)
@@ -88,9 +90,13 @@ public class SceneFactory {
                 stage.setScene(CookieScene.create(stage))
         );
 
+        fileBtn.setOnAction(e ->
+                stage.setScene(FileScreen.create(stage))
+        );
+
         VBox vBox = new VBox(10);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(btn, cookiekBtn);
+        vBox.getChildren().addAll(btn, fileBtn, cookiekBtn);
 
         return new Scene(vBox, 640, 480);
     }
