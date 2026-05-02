@@ -4,6 +4,7 @@ import makers.*;
 import java.math.BigInteger;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameDriver {
     private Grandmas grandmas;
@@ -11,14 +12,12 @@ public class GameDriver {
     private Wizards wizards;
     private Game tuple;
     private long cookies;
-    private long cps;
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * Constructor for new game
      * initializes fresh unit classes
      * sets cookies to 0
-     * calculates cps, which will be 0
      * creates new model class for game tuple
      */
     GameDriver() {
@@ -26,7 +25,6 @@ public class GameDriver {
         this.factories = new Factories();
         this.wizards = new Wizards();
         this.cookies = 0;
-        calculateCps();
         this.tuple = new Game();
     }
 
@@ -43,18 +41,28 @@ public class GameDriver {
         this.factories = new Factories(tuple);
         this.wizards = new Wizards(tuple);
         this.cookies = tuple.getCookies();
-        calculateCps();
     }
 
     /**
      * calculates player's total cookies per second (cps)
      * @return sum of each unit type's cps
      */
-    public void calculateCps() {
-        this.cps = grandmas.getCps() + factories.getCps() + wizards.getCps();
+    public long calculateCps() {
+        return grandmas.getCps() + factories.getCps() + wizards.getCps();
     }
 
-    
+    public void startAutoCookies() {
+        scheduler.scheduleAtFixedRate(this::countAutoCookies, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void countAutoCookies() {
+        cookies += calculateCps();
+
+    }
+
+    public void stopAutoCookies() {
+        scheduler.shutdown();
+    }
 
     public void addCookie() {
         this.cookies++;
