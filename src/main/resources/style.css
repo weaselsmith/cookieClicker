@@ -3,3 +3,7 @@
     -fx-border-width: 2;
     -fx-padding: 10;
 }
+
+.hover-box:hover {
+    -fx-background-color: lightgray;
+}
