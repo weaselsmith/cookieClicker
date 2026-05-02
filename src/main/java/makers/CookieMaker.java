@@ -29,7 +29,7 @@ public abstract class CookieMaker {
     }
 
     protected void updatePrice() {
-        priceForNext = (long) Math.floor(priceForNext * 1.5);
+        priceForNext = (long) Math.floor(priceForNext * 1.1);
     }
 
     public String getName() {
