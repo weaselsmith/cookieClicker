@@ -13,6 +13,11 @@ public abstract class CookieMaker {
         this.num = 0;
     }
 
+    public CookieMaker(int lvl, long num) {
+        this.lvl = lvl;
+        this.num = num;
+    }
+
     public void add() {
         this.num++;
         updatePrice();
@@ -50,5 +55,13 @@ public abstract class CookieMaker {
 
     public long getCps() {
         return cps;
+    }
+
+    public void setNum(long num) {
+        this.num = num;
+    }
+
+    public void setLvl(int lvl) {
+        this.lvl = lvl;
     }
 }
