@@ -14,7 +14,7 @@ public class Grandmas extends CookieMaker {
     public Grandmas(Game tuple) {
         super(tuple.getGrandmaLvl(), tuple.getNumGrandmas());
         cookieRate = 1;
-        priceForNext = 100;
+        loadPrice(100);
         name = "grandma";
         updateCPS();
     }

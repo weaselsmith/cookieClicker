@@ -9,8 +9,8 @@ public class GameDriver {
     private Factories factories;
     private Wizards wizards;
     private Game tuple;
-    public long cookies;
-    public long cps;
+    private long cookies;
+    private long cps;
 
     /**
      * Constructor for new game
@@ -28,10 +28,20 @@ public class GameDriver {
         this.tuple = new Game();
     }
 
+    /**
+     * Constructor to load a game from save
+     * Uses db Game model to get data
+     *
+     * @param tuple
+     */
     GameDriver(Game tuple) {
         this.tuple = tuple;
+        this.grandmas = new Grandmas(tuple);
+        this.factories = new Factories(tuple);
+        this.wizards = new Wizards(tuple);
+        this.cookies = tuple.getCookies();
+        this.cps = calculateCps();
     }
-
 
     /**
      * calculates player's total cookies per second (cps)
@@ -39,5 +49,13 @@ public class GameDriver {
      */
     public long calculateCps() {
         return grandmas.getCps() + factories.getCps() + wizards.getCps();
+    }
+
+    public void addCookie() {
+        this.cookies++;
+    }
+
+    public long getCookies() {
+        return cookies;
     }
 }

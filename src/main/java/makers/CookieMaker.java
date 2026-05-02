@@ -3,17 +3,17 @@ package makers;
 public abstract class CookieMaker {
     protected String name;
     protected int lvl;
-    protected long num;
+    protected int num;
     protected long priceForNext;
     protected int cookieRate;
-    protected long cps;  // cps = cookies for second
+    protected int cps;  // cps = cookies for second
 
     public CookieMaker() {
         this.lvl = 1;
         this.num = 0;
     }
 
-    public CookieMaker(int lvl, long num) {
+    public CookieMaker(int lvl, int num) {
         this.lvl = lvl;
         this.num = num;
     }
@@ -35,6 +35,17 @@ public abstract class CookieMaker {
 
     protected void updatePrice() {
         priceForNext = (long) Math.floor(priceForNext * 1.1);
+    }
+
+    /**
+     * used to load data on a saved game to get correct unit prices
+     * @param initialPrice the price for the first of that item
+     */
+    protected void loadPrice(long initialPrice) {
+        this.priceForNext = initialPrice;
+        for (int i = 0; i < num; i++) {
+            updatePrice();
+        }
     }
 
     public String getName() {
