@@ -2,7 +2,8 @@ import model.Game;
 import makers.*;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class GameDriver {
     private Grandmas grandmas;
@@ -11,6 +12,7 @@ public class GameDriver {
     private Game tuple;
     private long cookies;
     private long cps;
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * Constructor for new game
@@ -24,15 +26,16 @@ public class GameDriver {
         this.factories = new Factories();
         this.wizards = new Wizards();
         this.cookies = 0;
-        this.cps = calculateCps();
+        calculateCps();
         this.tuple = new Game();
     }
 
     /**
      * Constructor to load a game from save
      * Uses db Game model to get data
-     *
-     * @param tuple
+     * Units are initialized using load game constructor
+     * cookies are derived from db data, then increased based on time away
+     * @param tuple a row of data from the Game table
      */
     GameDriver(Game tuple) {
         this.tuple = tuple;
@@ -40,16 +43,18 @@ public class GameDriver {
         this.factories = new Factories(tuple);
         this.wizards = new Wizards(tuple);
         this.cookies = tuple.getCookies();
-        this.cps = calculateCps();
+        calculateCps();
     }
 
     /**
      * calculates player's total cookies per second (cps)
      * @return sum of each unit type's cps
      */
-    public long calculateCps() {
-        return grandmas.getCps() + factories.getCps() + wizards.getCps();
+    public void calculateCps() {
+        this.cps = grandmas.getCps() + factories.getCps() + wizards.getCps();
     }
+
+    
 
     public void addCookie() {
         this.cookies++;
@@ -57,5 +62,17 @@ public class GameDriver {
 
     public long getCookies() {
         return cookies;
+    }
+
+    public Grandmas getGrandmas() {
+        return grandmas;
+    }
+
+    public Wizards getWizards() {
+        return wizards;
+    }
+
+    public Factories getFactories() {
+        return factories;
     }
 }
