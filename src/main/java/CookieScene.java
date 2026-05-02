@@ -16,7 +16,7 @@ public class CookieScene {
 
     private static int count = 0;
 
-    public static Scene create(Stage stage) {
+    public static Scene create(Stage stage, DatabaseManager db) {
         Button backButton = new Button("Back to Dashboard");
         backButton.setOnAction(e -> {
             SceneManager.getInstance().navigateTo(SceneType.DASHBOARD);

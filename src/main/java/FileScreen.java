@@ -19,7 +19,7 @@ public class FileScreen {
 
 
 
-    public static Scene create(Stage stage){
+    public static Scene create(Stage stage, DatabaseManager db) {
         Button backButton = new Button("Back to LOGIN");
         backButton.setOnAction(e -> {
             SceneManager.getInstance().navigateTo(SceneType.MAIN);
@@ -40,20 +40,20 @@ public class FileScreen {
         HBox file1 = new HBox();
         file1.setAlignment(Pos.CENTER);
         file1.setPrefSize(100,100);
-        file1.getStyleClass().add("hbox-bordered");
+        file1.getStyleClass().addAll("hbox-bordered", "hover-box");
         file1.getChildren().add(text1);
 
         HBox file2 = new HBox();
         file2.setAlignment(Pos.CENTER);
         file2.setPrefSize(100,100);
-        file2.getStyleClass().add("hbox-bordered");
+        file2.getStyleClass().addAll("hbox-bordered", "hover-box");
         file2.getChildren().add(text2);
 
 
         HBox file3 = new HBox();
         file3.setAlignment(Pos.CENTER);
         file3.setPrefSize(100,100);
-        file3.getStyleClass().add("hbox-bordered");
+        file3.getStyleClass().addAll("hbox-bordered", "hover-box");
         file3.getChildren().add(text3);
 
 

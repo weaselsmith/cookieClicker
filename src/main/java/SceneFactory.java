@@ -87,11 +87,11 @@ public class SceneFactory {
         );
 
         cookiekBtn.setOnAction(e ->
-                stage.setScene(CookieScene.create(stage))
+                stage.setScene(CookieScene.create(stage, db))
         );
 
         fileBtn.setOnAction(e ->
-                stage.setScene(FileScreen.create(stage))
+                stage.setScene(FileScreen.create(stage, db))
         );
 
         VBox vBox = new VBox(10);
