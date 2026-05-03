@@ -77,6 +77,60 @@ public class GameDriver {
         this.cookies++;
     }
 
+    /**
+     * public method for unit purchases
+     * intended to be used by store scene
+     * @param type type of unit being purchased
+     * @return
+     */
+    public boolean buyMaker(MakerType type) {
+        long price;
+        switch (type) {
+            case GRANDMA -> {
+                price = grandmas.getPriceForNext();
+                if (price > cookies) {
+                    return false;
+                }
+                grandmas.add();
+            }
+            case FACTORY -> {
+                price = factories.getPriceForNext();
+                if (price > cookies) {
+                    return false;
+                }
+                factories.add();
+            }
+            case WIZARD -> {
+                price = wizards.getPriceForNext();
+                if (price > cookies) {
+                    return false;
+                }
+                wizards.add();
+            }
+        }
+        return true;
+    }
+
+    /**
+     * public method for maker unit upgrades
+     * intended for use by store scene
+     * @param type the type of unit being upgraded
+     * @param price cost of the upgrade
+     * @return false if not enough cookies, true if successfully upgraded
+     */
+    public boolean levelUpUnit (MakerType type, long price) {
+        if (price > cookies) {
+            return false;
+        }
+        cookies -= price;
+        switch (type) {
+            case GRANDMA -> grandmas.levelUp();
+            case FACTORY -> factories.levelUp();
+            case WIZARD -> wizards.levelUp();
+        }
+        return true;
+    }
+
     public long getCookies() {
         return cookies;
     }
