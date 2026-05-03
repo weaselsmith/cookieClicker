@@ -83,7 +83,7 @@ public class GameDriver {
      * @param type type of unit being purchased
      * @return
      */
-    public boolean buyMaker(MakerType type) {
+    public boolean buyUnit(MakerType type) {
         long price;
         switch (type) {
             case GRANDMA -> {
@@ -91,6 +91,7 @@ public class GameDriver {
                 if (price > cookies) {
                     return false;
                 }
+                cookies -= price;
                 grandmas.add();
             }
             case FACTORY -> {
@@ -98,6 +99,7 @@ public class GameDriver {
                 if (price > cookies) {
                     return false;
                 }
+                cookies -= price;
                 factories.add();
             }
             case WIZARD -> {
@@ -105,6 +107,7 @@ public class GameDriver {
                 if (price > cookies) {
                     return false;
                 }
+                cookies -= price;
                 wizards.add();
             }
         }
@@ -118,7 +121,7 @@ public class GameDriver {
      * @param price cost of the upgrade
      * @return false if not enough cookies, true if successfully upgraded
      */
-    public boolean levelUpUnit (MakerType type, long price) {
+    public boolean upgradeUnit(MakerType type, long price) {
         if (price > cookies) {
             return false;
         }
@@ -129,6 +132,10 @@ public class GameDriver {
             case WIZARD -> wizards.levelUp();
         }
         return true;
+    }
+
+    public void save () {
+        // TODO: WRITE SAVE DATA TO TUPLE
     }
 
     public long getCookies() {
