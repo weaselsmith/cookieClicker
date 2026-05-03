@@ -6,6 +6,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * GameDriver class
+ * handles game logic and interaction between game elements and application
+ * a new instance is created when a game is started or loaded
+ * there is only need of one instance at a time
+ */
 public class GameDriver {
     private Grandmas grandmas;
     private Factories factories;
@@ -51,6 +57,9 @@ public class GameDriver {
         return grandmas.getCps() + factories.getCps() + wizards.getCps();
     }
 
+    /**
+     * schedules an addition of cookies made by units once every second
+     */
     public void startAutoCookies() {
         scheduler.scheduleAtFixedRate(this::countAutoCookies, 0, 1, TimeUnit.SECONDS);
     }

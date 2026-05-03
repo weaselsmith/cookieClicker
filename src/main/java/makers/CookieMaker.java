@@ -68,7 +68,7 @@ public abstract class CookieMaker {
         return cps;
     }
 
-    public void setNum(long num) {
+    public void setNum(int num) {
         this.num = num;
     }
 
