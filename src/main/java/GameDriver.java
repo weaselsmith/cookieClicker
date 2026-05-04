@@ -18,6 +18,7 @@ public class GameDriver {
     private Wizards wizards;
     private Game tuple;
     private long cookies;
+    private final SaveManager saveMan;
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     /**
@@ -32,6 +33,7 @@ public class GameDriver {
         this.wizards = new Wizards();
         this.cookies = 0;
         this.tuple = new Game();
+        this.saveMan = SaveManager.getInstance();
     }
 
     /**
@@ -47,6 +49,7 @@ public class GameDriver {
         this.factories = new Factories(tuple);
         this.wizards = new Wizards(tuple);
         this.cookies = tuple.getCookies();
+        this.saveMan = SaveManager.getInstance();
     }
 
     /**
@@ -116,6 +119,7 @@ public class GameDriver {
             }
         }
         tuple.setCookies(this.cookies);
+        saveMan.saveGame(tuple);
         return true;
     }
 
@@ -146,6 +150,7 @@ public class GameDriver {
             }
         }
         tuple.setCookies(this.cookies);
+        saveMan.saveGame(tuple);
         return true;
     }
 
