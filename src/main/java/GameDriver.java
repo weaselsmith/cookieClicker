@@ -66,7 +66,7 @@ public class GameDriver {
 
     private void countAutoCookies() {
         cookies += calculateCps();
-
+        tuple.setCookies(this.cookies);
     }
 
     public void stopAutoCookies() {
@@ -75,13 +75,14 @@ public class GameDriver {
 
     public void addCookie() {
         this.cookies++;
+        tuple.setCookies(this.cookies);
     }
 
     /**
      * public method for unit purchases
      * intended to be used by store scene
      * @param type type of unit being purchased
-     * @return
+     * @return true if purchase was successful
      */
     public boolean buyUnit(MakerType type) {
         long price;
@@ -93,6 +94,7 @@ public class GameDriver {
                 }
                 cookies -= price;
                 grandmas.add();
+                tuple.setNumGrandmas(grandmas.getNum());
             }
             case FACTORY -> {
                 price = factories.getPriceForNext();
@@ -101,6 +103,7 @@ public class GameDriver {
                 }
                 cookies -= price;
                 factories.add();
+                tuple.setNumFactories(factories.getNum());
             }
             case WIZARD -> {
                 price = wizards.getPriceForNext();
@@ -109,8 +112,10 @@ public class GameDriver {
                 }
                 cookies -= price;
                 wizards.add();
+                tuple.setNumWizards(wizards.getNum());
             }
         }
+        tuple.setCookies(this.cookies);
         return true;
     }
 
@@ -127,15 +132,21 @@ public class GameDriver {
         }
         cookies -= price;
         switch (type) {
-            case GRANDMA -> grandmas.levelUp();
-            case FACTORY -> factories.levelUp();
-            case WIZARD -> wizards.levelUp();
+            case GRANDMA -> {
+                grandmas.levelUp();
+                tuple.setGrandmaLvl(grandmas.getLvl());
+            }
+            case FACTORY -> {
+                factories.levelUp();
+                tuple.setFactoryLvl(factories.getLvl());
+            }
+            case WIZARD -> {
+                wizards.levelUp();
+                tuple.setWizardsLvl(wizards.getLvl());
+            }
         }
+        tuple.setCookies(this.cookies);
         return true;
-    }
-
-    public void save () {
-        // TODO: WRITE SAVE DATA TO TUPLE
     }
 
     public long getCookies() {
