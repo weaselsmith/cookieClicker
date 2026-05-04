@@ -27,10 +27,11 @@ public class SceneFactory {
     }
 
     private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
-        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
-        // other stuff can go here if needed
-        root.setBottom(NavBar.create(SceneType.MENU));
-        return new Scene(root, 640, 480);
+        // LoginScreenController either needs buildScene to be static, or it needs a constructor
+        // Static Call:
+        // return LoginScreenController.buildScene();
+        // replaces line below
+        return new Scene(new VBox(), 640, 480);  // this is a dummy return val
     }
 
     private static Scene buildMenuScene(Stage stage, DatabaseManager db) {
@@ -41,10 +42,7 @@ public class SceneFactory {
     }
 
     private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
-        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
-        // other stuff can go here if needed
-        root.setBottom(NavBar.create(SceneType.MENU));
-        return new Scene(root, 640, 480);
+        return CookieScene.create(stage);
     }
 
     private static Scene buildStoreScene(Stage stage, DatabaseManager db) {
