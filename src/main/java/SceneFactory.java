@@ -1,6 +1,8 @@
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -15,13 +17,20 @@ import java.util.List;
 public class SceneFactory {
     public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
         return switch (type) {
-            case MAIN -> buildMainScene(stage, db);
+            case MENU -> buildMenuScene(stage, db);
             case DASHBOARD -> buildDashboardScene(stage, db);
             case ADD_ITEM -> buildAddItemScene(stage, db);
             case DB_TEST -> buildDBTestScene(stage, db);
         };
     }
 
+    private static Scene buildMenuScene(Stage stage, DatabaseManager db) {
+        BorderPane root = new BorderPane();
+        // other stuff can go here if needed
+        root.setBottom(NavBar.create(SceneManager.getInstance()));
+    }
+
+    /*
     private static Scene buildMainScene(Stage stage, DatabaseManager db) {
         Button loginBtn = new Button("Log In");
         loginBtn.setOnAction(e ->
@@ -129,5 +138,5 @@ public class SceneFactory {
         return new Scene(layout, 640, 480);
     }
 
-
+*/
 }
