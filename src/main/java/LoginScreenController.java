@@ -3,37 +3,50 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import java.util.List;
+import java.util.ArrayList;
 
 public class LoginScreenController {
 
-    //private final DatabaseManager db = DatabaseManager.getInstance();
-    //TODO commented this cause I was writing it before it's implemented
-
-    public Scene buildScene(){
+    public static Scene buildScene(DatabaseManager db){
         Label title = new Label("Login Page");
         TextField usernameField = new TextField();
         Label usernameLabel = new Label("Username:");
-        String inputtedUsername;
+        //String inputtedUsername;
 
         PasswordField passwordField = new PasswordField();
         Label passwordLabel = new Label("Password:");
-        String inputtedPassword;
+        //String inputtedPassword;
 
         HBox usernameRow = new HBox(10, usernameLabel, usernameField);
         HBox passwordRow = new HBox(10, passwordLabel, passwordField);
 
         Button loginButton = new Button("Login!");
         TextArea newUser = new TextArea("New user? Sign up below!");
-        Button signUp = new Button("Sign up!");
+        Button signUpButton = new Button("Sign up!");
 
         usernameField.setPromptText("Type username here");
         passwordField.setPromptText("******");
 
-        VBox root = new VBox(10, title, usernameRow, passwordRow, loginButton, newUser, signUp);
+        VBox root = new VBox(10, title, usernameRow, passwordRow, loginButton, newUser, signUpButton);
         root.setPadding(new Insets(16));
 
-        //TODO loginButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.{FIX THIS SPOT HERE}));)
-        //TODO signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.{FIX THIS SPOT HERE}));)
+        loginButton.setOnAction(e -> {
+            String inputtedUsername = usernameField.getText();
+            String inputtedPassword = passwordField.getText();
+
+            if (isValidInput(inputtedUsername, inputtedPassword)) {
+
+
+
+                SceneManager.getInstance().navigateTo(SceneType.COOKIE);
+            }
+
+            else{
+                title.setText("Please make sure you input a valid username and password.");
+            }
+        });
+        signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
 
         //refresh();
 
@@ -41,7 +54,7 @@ public class LoginScreenController {
 
     }
 
-    public boolean isValidInput(String username, String password) {
+    public static boolean isValidInput(String username, String password) {
         if (username == null || username.trim().isEmpty()){
             return false;
         }
