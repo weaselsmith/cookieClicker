@@ -10,7 +10,7 @@ public class Main extends Application {
 
         SceneManager.init(stage, db);
         stage.setTitle("Cookie Clicker");
-        SceneManager.getInstance().navigateTo(SceneType.MAIN); // changed from SceneType.DB_TEST
+        SceneManager.getInstance().navigateTo(SceneType.LOGIN); // changed from SceneType.DB_TEST
         stage.show();
     }
 

@@ -1,6 +1,8 @@
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -15,13 +17,56 @@ import java.util.List;
 public class SceneFactory {
     public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
         return switch (type) {
-            case MAIN -> buildMainScene(stage, db);
-            case DASHBOARD -> buildDashboardScene(stage, db);
-            case ADD_ITEM -> buildAddItemScene(stage, db);
-            case DB_TEST -> buildDBTestScene(stage, db);
+            case LOGIN -> buildLoginScene(stage, db);
+            case MENU -> buildMenuScene(stage, db);
+            case COOKIE -> buildCookieScene(stage, db);
+            case STORE -> buildStoreScene(stage, db);
+            case STATS -> buildStatsScene(stage, db);
+            case CREDITS -> buildCreditsScene(stage, db);
         };
     }
 
+    private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
+        // LoginScreenController either needs buildScene to be static, or it needs a constructor
+        // Static Call:
+        // return LoginScreenController.buildScene();
+        // replaces line below
+        return new Scene(new VBox(), 640, 480);  // this is a dummy return val
+    }
+
+    private static Scene buildMenuScene(Stage stage, DatabaseManager db) {
+        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
+        // other stuff can go here if needed
+        root.setBottom(NavBar.create(SceneType.MENU));
+        return new Scene(root, 640, 480);
+    }
+
+    private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
+        return CookieScene.create(stage);
+    }
+
+    private static Scene buildStoreScene(Stage stage, DatabaseManager db) {
+        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
+        // other stuff can go here if needed
+        root.setBottom(NavBar.create(SceneType.MENU));
+        return new Scene(root, 640, 480);
+    }
+
+    private static Scene buildStatsScene(Stage stage, DatabaseManager db) {
+        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
+        // other stuff can go here if needed
+        root.setBottom(NavBar.create(SceneType.MENU));
+        return new Scene(root, 640, 480);
+    }
+
+    private static Scene buildCreditsScene(Stage stage, DatabaseManager db) {
+        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
+        // other stuff can go here if needed
+        root.setBottom(NavBar.create(SceneType.MENU));
+        return new Scene(root, 640, 480);
+    }
+
+    /*
     private static Scene buildMainScene(Stage stage, DatabaseManager db) {
         Button loginBtn = new Button("Log In");
         loginBtn.setOnAction(e ->
@@ -129,5 +174,5 @@ public class SceneFactory {
         return new Scene(layout, 640, 480);
     }
 
-
+*/
 }

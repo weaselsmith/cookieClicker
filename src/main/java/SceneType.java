@@ -1,6 +1,8 @@
 public enum SceneType {
-    MAIN,
-    DASHBOARD,
-    ADD_ITEM,
-    DB_TEST,
+    LOGIN,
+    MENU,
+    COOKIE,
+    STORE,
+    STATS,
+    CREDITS
 }
