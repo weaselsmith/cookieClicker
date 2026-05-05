@@ -64,7 +64,8 @@ public class DatabaseManager {
                     high_score INTEGER NOT NULL DEFAULT 0,
                     max_grandmas INTEGER NOT NULL DEFAULT 0,
                     max_factories INTEGER NOT NULL DEFAULT 0,
-                    max_wizards INTEGER NOT NULL DEFAULT 0
+                    max_wizards INTEGER NOT NULL DEFAULT 0,
+                    password TEXT NOT NULL
                 )
                 """;
 
@@ -287,6 +288,7 @@ public class DatabaseManager {
             pstmt.setInt(4, user.getMaxFactories());
             pstmt.setInt(5, user.getMaxWizards());
             pstmt.setInt(6, user.getId());
+            pstmt.setString(7, user.getPassword());
 
             pstmt.executeUpdate();
 
