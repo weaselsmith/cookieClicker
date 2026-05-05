@@ -52,6 +52,7 @@ public class GameDriver {
         this.saveMan = SaveManager.getInstance();
     }
 
+
     /**
      * calculates player's total cookies per second (cps)
      * @return sum of each unit type's cps
