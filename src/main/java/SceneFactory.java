@@ -24,15 +24,22 @@ public class SceneFactory {
             case STORE -> buildStoreScene(stage, db);
             case STATS -> buildStatsScene(stage, db);
             case CREDITS -> buildCreditsScene(stage, db);
+            //case SIGNUP -> buildSignUpScene(stage, db);
+            case FILE -> buildFileScene(stage, db);
         };
     }
 
     private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
         // LoginScreenController either needs buildScene to be static, or it needs a constructor
         // Static Call:
-        // return LoginScreenController.buildScene();
+        return LoginScreenController.buildScene(db);
         // replaces line below
-        return new Scene(new VBox(), 640, 480);  // this is a dummy return val
+        //return new Scene(new VBox(), 640, 480);  // this is a dummy return val
+    }
+
+    private static Scene buildFileScene(Stage stage, DatabaseManager db) {
+
+        return FileScreen.create(stage, db);
     }
 
     private static Scene buildMenuScene(Stage stage, DatabaseManager db) {
@@ -43,7 +50,7 @@ public class SceneFactory {
     }
 
     private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
-        return CookieScene.create(stage);
+        return CookieScene.create(stage, db);
     }
 
     private static Scene buildStoreScene(Stage stage, DatabaseManager db) {
