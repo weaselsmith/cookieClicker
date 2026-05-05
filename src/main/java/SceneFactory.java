@@ -10,11 +10,13 @@ import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
+import model.Game;
 import model.Upgrade;
 
 import java.util.List;
 
 public class SceneFactory {
+
     public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
         return switch (type) {
             case LOGIN -> buildLoginScene(stage, db);
@@ -23,15 +25,22 @@ public class SceneFactory {
             case STORE -> buildStoreScene(stage, db);
             case STATS -> buildStatsScene(stage, db);
             case CREDITS -> buildCreditsScene(stage, db);
+            //case SIGNUP -> buildSignUpScene(stage, db);
+            case FILE -> buildFileScene(stage, db);
         };
     }
 
     private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
         // LoginScreenController either needs buildScene to be static, or it needs a constructor
         // Static Call:
-        // return LoginScreenController.buildScene();
+        return LoginScreenController.buildScene(db);
         // replaces line below
-        return new Scene(new VBox(), 640, 480);  // this is a dummy return val
+        //return new Scene(new VBox(), 640, 480);  // this is a dummy return val
+    }
+
+    private static Scene buildFileScene(Stage stage, DatabaseManager db) {
+
+        return FileScreen.create(stage, db);
     }
 
     private static Scene buildMenuScene(Stage stage, DatabaseManager db) {
@@ -42,7 +51,7 @@ public class SceneFactory {
     }
 
     private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
-        return CookieScene.create(stage);
+        return CookieScene.create(stage, db);
     }
 
     private static Scene buildStoreScene(Stage stage, DatabaseManager db) {
@@ -79,18 +88,23 @@ public class SceneFactory {
     private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
         Button btn = new Button("Dashboard");
         Button cookiekBtn = new Button("Navigate to Cookie Scene");
+        Button fileBtn = new Button("Navigate to File Screen");
 
         btn.setOnAction(e ->
                 SceneManager.getInstance().navigateTo(SceneType.ADD_ITEM)
         );
 
         cookiekBtn.setOnAction(e ->
-                stage.setScene(CookieScene.create(stage))
+                stage.setScene(CookieScene.create(stage, db))
+        );
+
+        fileBtn.setOnAction(e ->
+                stage.setScene(FileScreen.create(stage, db))
         );
 
         VBox vBox = new VBox(10);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(btn, cookiekBtn);
+        vBox.getChildren().addAll(btn, fileBtn, cookiekBtn);
 
         return new Scene(vBox, 640, 480);
     }
