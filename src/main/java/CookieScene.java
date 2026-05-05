@@ -16,9 +16,9 @@ import java.awt.*;
 
 public class CookieScene {
 
-    private static int count = 0;
 
-    public static Scene create(Stage stage, DatabaseManager db) {
+    public static Scene create(Stage stage, DatabaseManager db, Game game1) {
+
 
         Text counterText = new Text("Score: 0");
         counterText.getStyleClass().add("bold-text");
@@ -33,7 +33,8 @@ public class CookieScene {
         cookieButton.setStyle("-fx-background-color: transparent;");
         cookieButton.setOnAction(e -> {
             //db.updateGame();
-            counterText.setText("Score: " + ++count);
+            game1.setCookies(game1.getCookies() + 1);
+            counterText.setText("Score: " + game1.getCookies());
         });
 
 

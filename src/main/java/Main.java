@@ -8,6 +8,8 @@ public class Main extends Application {
     public void start(Stage stage) {
         db = new DatabaseManager();
 
+
+        SaveManager.init(db);
         SceneManager.init(stage, db);
         stage.setTitle("Cookie Clicker");
         SceneManager.getInstance().navigateTo(SceneType.MENU); // changed from SceneType.LOGIN
