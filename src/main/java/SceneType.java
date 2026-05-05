@@ -1,5 +1,6 @@
 public enum SceneType {
     LOGIN,
+    SIGNUP,
     MENU,
     COOKIE,
     STORE,
