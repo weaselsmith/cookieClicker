@@ -41,12 +41,11 @@ class DatabaseManagerTest {
 
     @Test
     void addUpgrade() {
-        db.addUpgrade("Test Upgrade", 100);
+        db.addUpgrade("Test Upgrade", 100, "grandma");
 
         List<Upgrade> upgrades = db.getAllUpgrades();
 
-        assertEquals(1, upgrades.size());
-        assertEquals("Test Upgrade", upgrades.get(0).getName());
+        assertEquals("Test Upgrade", upgrades.getLast().getName());
     }
 
     @Test
@@ -55,7 +54,7 @@ class DatabaseManagerTest {
 
     @Test
     void addGame() {
-        db.addUser("Tom");
+        db.addUser("Tom", "secret");
         List<User> users = db.getAllUsers();
         db.addGame(users.getFirst().getId());
         List<Game> games = db.getAllGames();

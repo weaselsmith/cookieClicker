@@ -38,7 +38,7 @@ public class SignUpScreenController {
 
             if (isValidInput(inputtedUsername, inputtedPassword)) {
                 if (inputtedPassword.equals(inputtedConfirm) /* && inputtedUsername not in db already*/){
-                    db.addUser(inputtedUsername);
+                    db.addUser(inputtedUsername, inputtedPassword);
                     SceneManager.getInstance().navigateTo(SceneType.LOGIN);
                     //and pass in user id
                 }
