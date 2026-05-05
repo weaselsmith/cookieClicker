@@ -1,0 +1,13 @@
+.hbox-bordered {
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-padding: 10;
+}
+
+.hover-box:hover {
+    -fx-background-color: lightgray;
+}
+
+.bold-text {
+    -fx-font-weight: bold;
+}

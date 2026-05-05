@@ -5,5 +5,6 @@ public enum SceneType {
     COOKIE,
     STORE,
     STATS,
-    CREDITS
+    CREDITS,
+    FILE
 }

@@ -1,7 +1,9 @@
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -14,12 +16,16 @@ import java.awt.*;
 
 public class CookieScene {
 
-    private static int count = 0;
+    private static int counter = 0;
 
-    public static Scene create(Stage stage) {
+
+    public static Scene create(Stage stage, DatabaseManager db) {
+
+
         Text counterText = new Text("Score: 0");
+        counterText.getStyleClass().add("bold-text");
 
-        Image cookie = new Image(CookieScene.class.getResource("/images/cookie_1.jfif").toExternalForm());
+        Image cookie = new Image(CookieScene.class.getResource("/images/cookie1_new.png").toExternalForm());
         ImageView cookieView = new ImageView(cookie);
         cookieView.setFitHeight(100);
         cookieView.setFitWidth(100);
@@ -29,16 +35,22 @@ public class CookieScene {
         cookieButton.setStyle("-fx-background-color: transparent;");
         cookieButton.setOnAction(e -> {
             //db.updateGame();
-            counterText.setText("Score: " + ++count);
+            counterText.setText("Score: " + counter++);
         });
 
 
-        VBox root = new VBox(10);
-        HBox hBox = new HBox(10);
-        root.setAlignment(Pos.CENTER);
-        hBox.setAlignment(Pos.CENTER);
+        BorderPane root = new BorderPane();
+        root.getStylesheets().add(
+                FileScreen.class.getResource("/style.css").toExternalForm()
+        );
 
-        root.getChildren().addAll(cookieButton, counterText, hBox);
+        root.setBottom(NavBar.create(SceneType.COOKIE));
+
+        VBox vBox = new VBox(10);
+        vBox.getChildren().addAll(cookieButton,counterText);
+        vBox.setAlignment(Pos.CENTER);
+
+        root.setCenter(vBox);
 
         return new Scene(root, 640, 480);
     }

@@ -49,7 +49,7 @@ public class LoginScreenController {
             }
         });
 
-        signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
+        //signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
 
         return new Scene(root, 640, 480);
 
