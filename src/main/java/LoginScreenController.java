@@ -46,7 +46,7 @@ public class LoginScreenController {
                 title.setText("Please make sure you input a valid username and password.");
             }
         });
-        signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
+        //signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
 
         //refresh();
 

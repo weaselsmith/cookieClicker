@@ -20,10 +20,6 @@ public class FileScreen {
 
 
     public static Scene create(Stage stage, DatabaseManager db) {
-        Button backButton = new Button("Back to LOGIN");
-        backButton.setOnAction(e -> {
-            SceneManager.getInstance().navigateTo(SceneType.MAIN);
-        });
 
 
         Text text1 = new Text("File 1");
@@ -31,23 +27,23 @@ public class FileScreen {
         Text text3 = new Text("File 3");
 
 
-        VBox root = new VBox();
-        root.setAlignment(Pos.CENTER);
-        root.getStylesheets().add(
-                FileScreen.class.getResource("/style.css").toExternalForm()
-        );
-
         HBox file1 = new HBox();
         file1.setAlignment(Pos.CENTER);
         file1.setPrefSize(100,100);
         file1.getStyleClass().addAll("hbox-bordered", "hover-box");
         file1.getChildren().add(text1);
+        file1.setOnMouseClicked(e -> {
+            System.out.println("File 1 clicked!");
+        });
 
         HBox file2 = new HBox();
         file2.setAlignment(Pos.CENTER);
         file2.setPrefSize(100,100);
         file2.getStyleClass().addAll("hbox-bordered", "hover-box");
         file2.getChildren().add(text2);
+        file2.setOnMouseClicked(e -> {
+            System.out.println("File 2 clicked!");
+        });
 
 
         HBox file3 = new HBox();
@@ -55,10 +51,26 @@ public class FileScreen {
         file3.setPrefSize(100,100);
         file3.getStyleClass().addAll("hbox-bordered", "hover-box");
         file3.getChildren().add(text3);
+        file3.setOnMouseClicked(e -> {
+            System.out.println("File 3 clicked!");
+        });
 
 
 
-        root.getChildren().addAll(backButton, file1,file2,file3);
+        BorderPane root = new BorderPane();
+
+        root.getStylesheets().add(
+                FileScreen.class.getResource("/style.css").toExternalForm()
+        );
+
+        VBox filesBox = new VBox(10);
+        filesBox.setAlignment(Pos.CENTER);
+
+        filesBox.getChildren().addAll(file1, file2, file3);
+
+        root.setCenter(filesBox);
+        root.setBottom(NavBar.create(SceneType.FILE));
+
         return new Scene(root, 640, 480);
     }
 
