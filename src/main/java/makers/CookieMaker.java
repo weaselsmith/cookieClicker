@@ -56,7 +56,7 @@ public abstract class CookieMaker {
         return lvl;
     }
 
-    public long getNum() {
+    public int getNum() {
         return num;
     }
 
