@@ -37,11 +37,4 @@ public class SceneManager {
         stage.setScene(scene);
     }
 
-    public void setCurrentGame(GameDriver game) {
-        this.currentGame = game;
-    }
-
-    public GameDriver getCurrentGame() {
-        return currentGame;
-    }
 }
