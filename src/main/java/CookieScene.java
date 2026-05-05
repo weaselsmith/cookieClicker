@@ -21,6 +21,7 @@ public class CookieScene {
     public static Scene create(Stage stage, DatabaseManager db) {
 
         Text counterText = new Text("Score: 0");
+        counterText.getStyleClass().add("bold-text");
 
         Image cookie = new Image(CookieScene.class.getResource("/images/cookie_1.jfif").toExternalForm());
         ImageView cookieView = new ImageView(cookie);
@@ -37,14 +38,17 @@ public class CookieScene {
 
 
         BorderPane root = new BorderPane();
+        root.getStylesheets().add(
+                FileScreen.class.getResource("/style.css").toExternalForm()
+        );
 
         root.setBottom(NavBar.create(SceneType.COOKIE));
 
-        HBox hBox = new HBox(10);
-        hBox.getChildren().addAll(counterText, cookieButton);
-        hBox.setAlignment(Pos.CENTER);
+        VBox vBox = new VBox(10);
+        vBox.getChildren().addAll(cookieButton,counterText);
+        vBox.setAlignment(Pos.CENTER);
 
-        root.setCenter(hBox);
+        root.setCenter(vBox);
 
         return new Scene(root, 640, 480);
     }
