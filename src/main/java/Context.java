@@ -10,14 +10,14 @@ public class Context {
     public Context(){
         driver = new GameDriver();
         game = driver.getGame();
-        // driver.startAutoCookies();
+        driver.startAutoCookies();
     }
 
     public Context(User user, Game game){
         this.user = user;
         this.game = game;
         driver = new GameDriver(game);
-        // driver.startAutoCookies();
+        driver.startAutoCookies();
     }
 
     public User getUser() {
@@ -36,7 +36,7 @@ public class Context {
         this.game = game;
         driver.stopAutoCookies();
         driver = new GameDriver(game);
-        // driver.startAutoCookies();
+        driver.startAutoCookies();
     }
 
     public GameDriver getDriver() {
