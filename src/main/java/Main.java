@@ -12,7 +12,7 @@ public class Main extends Application {
 
 
         SaveManager.init(db);
-        SceneManager.init(stage, db);
+        SceneManager.init(stage, db, context);
         stage.setTitle("Cookie Clicker");
         SceneManager.getInstance().navigateTo(SceneType.LOGIN);
         stage.show();
