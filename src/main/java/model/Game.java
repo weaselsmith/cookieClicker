@@ -15,6 +15,15 @@ public class Game {
     private LocalDate lastLogin;
 
     public Game() {
+        this.gameId = -1;
+        this.cookies = 0;
+        this.numGrandmas = 0;
+        this.numFactories = 0;
+        this.numWizards = 0;
+        this.grandmaLvl = 1;
+        this.factoryLvl = 1;
+        this.wizardsLvl = 1;
+        this.lastLogin = LocalDate.now();
     }
 
     public Game(int gameId, long cookies, int numGrandmas, int numFactories,
