@@ -20,7 +20,7 @@ public class GameDriver {
     private Game tuple;
     private long cookies;
     private final SaveManager saveMan;
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * Constructor for new game
@@ -35,7 +35,7 @@ public class GameDriver {
         this.cookies = 0;
         this.tuple = new Game();
         this.saveMan = SaveManager.getInstance();
-        startAutoCookies();
+        AutoSaveScheduler.start(tuple);
     }
 
     /**
@@ -52,7 +52,7 @@ public class GameDriver {
         this.wizards = new Wizards(tuple);
         this.cookies = tuple.getCookies();
         this.saveMan = SaveManager.getInstance();
-        startAutoCookies();
+        AutoSaveScheduler.start(tuple);
     }
 
 
