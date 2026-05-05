@@ -50,7 +50,7 @@ public class SceneFactory {
     }
 
     private static Scene buildCookieScene(Stage stage, DatabaseManager db, Context context) {
-        return CookieScene.create(stage);
+        return CookieScene.create(stage, db);
     }
 
     private static Scene buildStoreScene(Stage stage, DatabaseManager db, Context context) {

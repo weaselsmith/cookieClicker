@@ -3,16 +3,18 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     private DatabaseManager db;
+    private Context context;
 
     @Override
     public void start(Stage stage) {
         db = new DatabaseManager();
+        context = new Context();
 
 
         SaveManager.init(db);
-        SceneManager.init(stage, db);
+        SceneManager.init(stage, db, context);
         stage.setTitle("Cookie Clicker");
-        SceneManager.getInstance().navigateTo(SceneType.MENU); // changed from SceneType.LOGIN
+        SceneManager.getInstance().navigateTo(SceneType.LOGIN);
         stage.show();
     }
 
