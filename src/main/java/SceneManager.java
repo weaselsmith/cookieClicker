@@ -11,6 +11,9 @@ public class SceneManager {
     private final Map<SceneType, Scene> cache =
             new EnumMap<>(SceneType.class);
 
+    private GameDriver currentGame;
+
+
     private SceneManager(Stage stage, DatabaseManager db) {
         this.db = db;
         this.stage = stage;
@@ -32,5 +35,13 @@ public class SceneManager {
         Scene scene = cache.computeIfAbsent(type,
                 t -> SceneFactory.create(t, stage, db));
         stage.setScene(scene);
+    }
+
+    public void setCurrentGame(GameDriver game) {
+        this.currentGame = game;
+    }
+
+    public GameDriver getCurrentGame() {
+        return currentGame;
     }
 }

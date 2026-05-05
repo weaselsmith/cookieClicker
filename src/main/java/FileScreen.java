@@ -10,6 +10,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import model.Game;
+import model.User;
 
 import java.awt.*;
 
@@ -17,9 +18,8 @@ import static java.awt.SystemColor.text;
 
 public class FileScreen {
 
-
-
     public static Scene create(Stage stage, DatabaseManager db) {
+
 
 
         Text text1 = new Text("File 1");

@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
+import model.Game;
 import model.Upgrade;
 
 import java.util.List;
@@ -50,7 +51,8 @@ public class SceneFactory {
     }
 
     private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
-        return CookieScene.create(stage, db);
+        Game testGame = new Game();
+        return CookieScene.create(stage, db, testGame);
     }
 
     private static Scene buildStoreScene(Stage stage, DatabaseManager db) {
