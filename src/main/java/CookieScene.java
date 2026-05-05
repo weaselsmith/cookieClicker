@@ -25,7 +25,7 @@ public class CookieScene {
         Text counterText = new Text("Score: 0");
         counterText.getStyleClass().add("bold-text");
 
-        Image cookie = new Image(CookieScene.class.getResource("/images/cookie_1.jfif").toExternalForm());
+        Image cookie = new Image(CookieScene.class.getResource("/images/cookie1_new.png").toExternalForm());
         ImageView cookieView = new ImageView(cookie);
         cookieView.setFitHeight(100);
         cookieView.setFitWidth(100);
