@@ -23,8 +23,11 @@ public class FileScreen {
 
 
         Text text1 = new Text("File 1");
+        text1.getStyleClass().add("bold-text");
         Text text2 = new Text("File 2");
+        text2.getStyleClass().add("bold-text");
         Text text3 = new Text("File 3");
+        text3.getStyleClass().add("bold-text");
 
 
         HBox file1 = new HBox();
@@ -34,6 +37,7 @@ public class FileScreen {
         file1.getChildren().add(text1);
         file1.setOnMouseClicked(e -> {
             System.out.println("File 1 clicked!");
+            SceneManager.getInstance().navigateTo(SceneType.COOKIE);
         });
 
         HBox file2 = new HBox();
@@ -43,6 +47,7 @@ public class FileScreen {
         file2.getChildren().add(text2);
         file2.setOnMouseClicked(e -> {
             System.out.println("File 2 clicked!");
+            SceneManager.getInstance().navigateTo(SceneType.COOKIE);
         });
 
 
@@ -53,6 +58,7 @@ public class FileScreen {
         file3.getChildren().add(text3);
         file3.setOnMouseClicked(e -> {
             System.out.println("File 3 clicked!");
+            SceneManager.getInstance().navigateTo(SceneType.COOKIE);
         });
 
 
