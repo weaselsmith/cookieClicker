@@ -1,4 +1,5 @@
 import model.Game;
+import model.User;
 import makers.*;
 
 import java.math.BigInteger;
@@ -19,7 +20,7 @@ public class GameDriver {
     private Game tuple;
     private long cookies;
     private final SaveManager saveMan;
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * Constructor for new game
@@ -27,13 +28,14 @@ public class GameDriver {
      * sets cookies to 0
      * creates new model class for game tuple
      */
-    GameDriver() {
+    public GameDriver() {
         this.grandmas = new Grandmas();
         this.factories = new Factories();
         this.wizards = new Wizards();
         this.cookies = 0;
         this.tuple = new Game();
         this.saveMan = SaveManager.getInstance();
+        AutoSaveScheduler.start(tuple);
     }
 
     /**
@@ -43,13 +45,14 @@ public class GameDriver {
      * cookies are derived from db data, then increased based on time away
      * @param tuple a row of data from the Game table
      */
-    GameDriver(Game tuple) {
+    public GameDriver(Game tuple) {
         this.tuple = tuple;
         this.grandmas = new Grandmas(tuple);
         this.factories = new Factories(tuple);
         this.wizards = new Wizards(tuple);
         this.cookies = tuple.getCookies();
         this.saveMan = SaveManager.getInstance();
+        AutoSaveScheduler.start(tuple);
     }
 
 
@@ -169,5 +172,9 @@ public class GameDriver {
 
     public Factories getFactories() {
         return factories;
+    }
+
+    public Game getGame() {
+        return this.tuple;
     }
 }

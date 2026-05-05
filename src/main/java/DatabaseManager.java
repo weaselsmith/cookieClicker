@@ -255,8 +255,91 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println("getAllGames failed: " + e.getMessage());
         }
-
         return games;
+    }
+
+    public List<Game> getUserGames(int userId) {
+        List<Game> games = new ArrayList<>();
+        String sql = "SELECT * FROM games WHERE user_id = (?) ORDER BY game_id ASC";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            try(ResultSet rs = pstmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    Game game = new Game(
+                            rs.getInt("game_id"),
+                            rs.getInt("cookies"),
+                            rs.getInt("num_grandmas"),
+                            rs.getInt("num_factories"),
+                            rs.getInt("num_wizards"),
+                            rs.getInt("grandma_lvl"),
+                            rs.getInt("factory_lvl"),
+                            rs.getInt("wizards_lvl"),
+                            LocalDate.parse(rs.getString("last_login"))
+                    );
+                    games.add(game);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("getAllGames failed: " + e.getMessage());
+        }
+        return games;
+    }
+
+
+    /**
+     * Queries for the most recently created game
+     * Intended to be used to get Game model upon starting new game
+     * @return Game with highest game_id
+     */
+    public Game getLastGame() {
+        String sql = "SELECT * FROM games ORDER BY game_id DESC LIMIT 1";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return new Game(
+                        rs.getInt("game_id"),
+                        rs.getInt("cookies"),
+                        rs.getInt("num_grandmas"),
+                        rs.getInt("num_factories"),
+                        rs.getInt("num_wizards"),
+                        rs.getInt("grandma_lvl"),
+                        rs.getInt("factory_lvl"),
+                        rs.getInt("wizards_lvl"),
+                        LocalDate.parse(rs.getString("last_login"))
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("getLastGame failed: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public Game getGameByID(int gameId) {
+        String sql = "SELECT * FROM games WHERE game_id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, gameId);
+            try(ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Game(
+                            rs.getInt("game_id"),
+                            rs.getInt("cookies"),
+                            rs.getInt("num_grandmas"),
+                            rs.getInt("num_factories"),
+                            rs.getInt("num_wizards"),
+                            rs.getInt("grandma_lvl"),
+                            rs.getInt("factory_lvl"),
+                            rs.getInt("wizards_lvl"),
+                            LocalDate.parse(rs.getString("last_login"))
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("addGame failed: " + e.getMessage());
+        }
+        return null;
     }
 
     public void updateGame(Game game) {
