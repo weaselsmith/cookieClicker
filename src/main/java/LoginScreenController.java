@@ -3,12 +3,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import java.util.List;
-import java.util.ArrayList;
 
 public class LoginScreenController {
 
-    public static Scene buildScene(DatabaseManager db){
+    public static Scene buildScene(DatabaseManager db, Context context){
         Label title = new Label("Login Page");
         TextField usernameField = new TextField();
         Label usernameLabel = new Label("Username:");

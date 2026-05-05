@@ -6,7 +6,7 @@ import javafx.scene.layout.HBox;
 
 public class SignUpScreenController {
 
-    public static Scene buildScene(DatabaseManager db){
+    public static Scene buildScene(DatabaseManager db, Context context){
         Button goBackButton = new Button("Back to Login?");
         Label title = new Label("Sign Up Page!");
 
@@ -26,6 +26,7 @@ public class SignUpScreenController {
         HBox confirmBox = new HBox(confirmPasswordLabel, confirmPassword);
 
         Button signUpButton = new Button("Sign Up!");
+        signUpButton.disableProperty().bind(newPassword.textProperty().isEqualTo(confirmPassword.textProperty()).not());
 
         VBox root = new VBox(10, goBackButton, title, nameBox, passwordBox, confirmBox, signUpButton);
         root.setPadding(new Insets(16));

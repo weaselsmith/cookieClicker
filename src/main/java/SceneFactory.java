@@ -1,25 +1,12 @@
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.TextArea;
-import javafx.geometry.Pos;
-import javafx.scene.layout.VBox;
-import model.Game;
-import model.Upgrade;
-
-import java.util.List;
 
 public class SceneFactory {
     public static Scene create(SceneType type, Stage stage, DatabaseManager db, Context context) {
         return switch (type) {
-            case LOGIN -> buildLoginScene(stage, db);
-            case SIGNUP -> buildSignUpScene(stage, db);
+            case LOGIN -> buildLoginScene(stage, db, context);
+            case SIGNUP -> buildSignUpScene(stage, db, context);
             case MENU -> buildMenuScene(stage, db, context);
             case COOKIE -> buildCookieScene(stage, db, context);
             case STORE -> buildStoreScene(stage, db, context);
@@ -29,17 +16,17 @@ public class SceneFactory {
         };
     }
 
-    private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
+    private static Scene buildLoginScene(Stage stage, DatabaseManager db, Context context) {
         // LoginScreenController either needs buildScene to be static, or it needs a constructor
         // Static Call:
-        return LoginScreenController.buildScene(db);
+        return LoginScreenController.buildScene(db, context);
         // replaces line below
         //return new Scene(new VBox(), 640, 480);  // this is a dummy return val
     }
 
-    private static Scene buildSignUpScene(Stage stage, DatabaseManager db) {
+    private static Scene buildSignUpScene(Stage stage, DatabaseManager db, Context context) {
         // Static Call:
-        return SignUpScreenController.buildScene(db);
+        return SignUpScreenController.buildScene(db, context);
     }
 
     private static Scene buildMenuScene(Stage stage, DatabaseManager db, Context context) {
