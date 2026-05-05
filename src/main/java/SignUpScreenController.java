@@ -6,7 +6,10 @@ import javafx.scene.layout.HBox;
 
 public class SignUpScreenController {
 
-    public static Scene buildScene(DatabaseManager db){
+    //private final DatabaseManager db = DatabaseManager.getInstance();
+    //TODO commented this cause I was writing it before it's implemented
+
+    public Scene buildScene(){
         Button goBackButton = new Button("Back to Login?");
         Label title = new Label("Sign Up Page!");
 
@@ -30,34 +33,13 @@ public class SignUpScreenController {
         VBox root = new VBox(10, goBackButton, title, nameBox, passwordBox, confirmBox, signUpButton);
         root.setPadding(new Insets(16));
 
-        signUpButton.setOnAction(e -> {
-            String inputtedUsername = newName.getText();
-            String inputtedPassword = newPassword.getText();
-            String inputtedConfirm = confirmPassword.getText();
+        //TODO signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.{FIX THIS SPOT HERE}));)
 
-            if (isValidInput(inputtedUsername, inputtedPassword)) {
-                if (inputtedPassword.equals(inputtedConfirm) /* && inputtedUsername not in db already*/){
-                    db.addUser(inputtedUsername);
-                    SceneManager.getInstance().navigateTo(SceneType.LOGIN);
-                    //and pass in user id
-                }
-
-            }
-        });
         //refresh();
+        //TODO wasn't sure if this is correct here or not
 
         return new Scene(root, 640, 480);
 
-    }
-
-    public static boolean isValidInput(String username, String password) {
-        if (username == null || username.trim().isEmpty() || username.length() < 3){
-            return false;
-        }
-        if (password == null || password.length() < 6){
-            return false;
-        }
-        return true;
     }
 
 

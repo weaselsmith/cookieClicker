@@ -12,11 +12,12 @@ public class SceneManager {
             new EnumMap<>(SceneType.class);
 
     private GameDriver currentGame;
+    private Context context;
 
-
-    private SceneManager(Stage stage, DatabaseManager db) {
+    private SceneManager(Stage stage, DatabaseManager db, Context context) {
         this.db = db;
         this.stage = stage;
+        this.context = context;
     }
 
     public static void init(Stage stage, DatabaseManager db) {
@@ -33,7 +34,7 @@ public class SceneManager {
 
     public void navigateTo(SceneType type) {
         Scene scene = cache.computeIfAbsent(type,
-                t -> SceneFactory.create(t, stage, db));
+                t -> SceneFactory.create(t, stage, db, context));
         stage.setScene(scene);
     }
 
