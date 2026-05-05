@@ -51,8 +51,7 @@ public class SceneFactory {
     }
 
     private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
-        Game testGame = new Game();
-        return CookieScene.create(stage, db, testGame);
+        return CookieScene.create(stage, db);
     }
 
     private static Scene buildStoreScene(Stage stage, DatabaseManager db) {
