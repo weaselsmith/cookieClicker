@@ -4,14 +4,16 @@ public class Upgrade {
     private int upgradeId;
     private String name;
     private int cost;
+    private String category;
 
     public Upgrade() {
     }
 
-    public Upgrade(int upgradeId, String name, int cost) {
+    public Upgrade(int upgradeId, String name, int cost, String category) {
         this.upgradeId = upgradeId;
         this.name = name;
         this.cost = cost;
+        this.category = category;
     }
 
     public int getUpgradeId() {
@@ -36,5 +38,13 @@ public class Upgrade {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

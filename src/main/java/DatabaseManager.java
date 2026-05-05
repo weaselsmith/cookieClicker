@@ -73,7 +73,8 @@ public class DatabaseManager {
                 CREATE TABLE IF NOT EXISTS upgrades (
                     upgrade_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL UNIQUE,
-                    cost INTEGER NOT NULL
+                    cost INTEGER NOT NULL,
+                    category TEXT NOT NULL
                 )
                 """;
 
@@ -97,14 +98,68 @@ public class DatabaseManager {
             System.err.println("createTables failed: " + e.getMessage());
             e.printStackTrace();
         }
+
+        String upgradesSeedSQL = "INSERT OR IGNORE INTO upgrades (name, cost, category) VALUES (?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(upgradesSeedSQL)) {
+            pstmt.setString(1, "Lovin'");
+            pstmt.setInt(2, 10);
+            pstmt.setString(3, "grandma");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "Ramblin'");
+            pstmt.setInt(2, 30);
+            pstmt.setString(3, "grandma");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "Gamblin'");
+            pstmt.setInt(2, 40);
+            pstmt.setString(3, "grandma");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "Wise");
+            pstmt.setInt(2, 50);
+            pstmt.setString(3, "wizard");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "Old");
+            pstmt.setInt(2, 100);
+            pstmt.setString(3, "wizard");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "Funky");
+            pstmt.setInt(2, 250);
+            pstmt.setString(3, "wizard");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "Socialist");
+            pstmt.setInt(2, 50);
+            pstmt.setString(3, "factory");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "Capitalist");
+            pstmt.setInt(2, 500);
+            pstmt.setString(3, "factory");
+            pstmt.executeUpdate();
+
+            pstmt.setString(1, "OSHA Approved");
+            pstmt.setInt(2, 1000);
+            pstmt.setString(3, "factory");
+            pstmt.executeUpdate();
+
+            System.out.println("Default upgrades seeded.");
+        } catch (SQLException e) {
+            System.err.println("seedDefaultUpgrades failed: " + e.getMessage());
+        }
     }
 
-    public void addUpgrade(String name, int cost) {
-        String sql = "INSERT INTO upgrades (name, cost) VALUES (?, ?)";
+    public void addUpgrade(String name, int cost, String category) {
+        String sql = "INSERT INTO upgrades (name, cost, category) VALUES (?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, name);
             pstmt.setInt(2, cost);
+            pstmt.setString(3, category);
             pstmt.executeUpdate();
 
             System.out.println("Added upgrade, name: " + name + ", cost: " + cost);
@@ -124,7 +179,8 @@ public class DatabaseManager {
                 Upgrade upgrade = new Upgrade(
                         rs.getInt("upgrade_id"),
                         rs.getString("name"),
-                        rs.getInt("cost")
+                        rs.getInt("cost"),
+                        rs.getString("category")
                 );
                 upgrades.add(upgrade);
             }
@@ -240,11 +296,12 @@ public class DatabaseManager {
         }
     }
 
-    public void addUser(String name) {
-        String sql = "INSERT INTO users (name) VALUES (?)";
+    public void addUser(String name, String password) {
+        String sql = "INSERT INTO users (name, password) VALUES (?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, name);
+            pstmt.setString(2, password);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("addUser failed: " + e.getMessage());
