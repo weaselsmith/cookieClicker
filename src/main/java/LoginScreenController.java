@@ -34,21 +34,22 @@ public class LoginScreenController {
         loginButton.setOnAction(e -> {
             String inputtedUsername = usernameField.getText();
             String inputtedPassword = passwordField.getText();
-
             if (isValidInput(inputtedUsername, inputtedPassword)) {
-
-
-
-                SceneManager.getInstance().navigateTo(SceneType.COOKIE);
+                //TODO check if login info is successful
+                //if (login info is successful) {
+                //     pass in user info
+                //     SceneManager.getInstance().navigateTo(SceneType.COOKIE);
+                //}
+                //else {
+                //      title.setText("Invalid login information, try again");
+                //}
             }
-
             else{
                 title.setText("Please make sure you input a valid username and password.");
             }
         });
-        signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
 
-        //refresh();
+        signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
 
         return new Scene(root, 640, 480);
 
