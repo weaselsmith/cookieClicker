@@ -16,17 +16,16 @@ import model.Upgrade;
 import java.util.List;
 
 public class SceneFactory {
-
-    public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
+    public static Scene create(SceneType type, Stage stage, DatabaseManager db, Context context) {
         return switch (type) {
             case LOGIN -> buildLoginScene(stage, db);
-            case MENU -> buildMenuScene(stage, db);
-            case COOKIE -> buildCookieScene(stage, db);
-            case STORE -> buildStoreScene(stage, db);
-            case STATS -> buildStatsScene(stage, db);
-            case CREDITS -> buildCreditsScene(stage, db);
-            //case SIGNUP -> buildSignUpScene(stage, db);
-            case FILE -> buildFileScene(stage, db);
+            case SIGNUP -> buildSignUpScene(stage, db);
+            case MENU -> buildMenuScene(stage, db, context);
+            case COOKIE -> buildCookieScene(stage, db, context);
+            case STORE -> buildStoreScene(stage, db, context);
+            case STATS -> buildStatsScene(stage, db, context);
+            case CREDITS -> buildCreditsScene(stage, db, context);
+            case FILE -> null; // this one is a placeholder to avoid error
         };
     }
 
@@ -38,37 +37,37 @@ public class SceneFactory {
         //return new Scene(new VBox(), 640, 480);  // this is a dummy return val
     }
 
-    private static Scene buildFileScene(Stage stage, DatabaseManager db) {
-
-        return FileScreen.create(stage, db);
+    private static Scene buildSignUpScene(Stage stage, DatabaseManager db) {
+        // Static Call:
+        return SignUpScreenController.buildScene(db);
     }
 
-    private static Scene buildMenuScene(Stage stage, DatabaseManager db) {
+    private static Scene buildMenuScene(Stage stage, DatabaseManager db, Context context) {
         BorderPane root = new BorderPane();  // doesn't have to stay borderPane
         // other stuff can go here if needed
         root.setBottom(NavBar.create(SceneType.MENU));
         return new Scene(root, 640, 480);
     }
 
-    private static Scene buildCookieScene(Stage stage, DatabaseManager db) {
-        return CookieScene.create(stage, db);
+    private static Scene buildCookieScene(Stage stage, DatabaseManager db, Context context) {
+        return CookieScene.create(stage);
     }
 
-    private static Scene buildStoreScene(Stage stage, DatabaseManager db) {
+    private static Scene buildStoreScene(Stage stage, DatabaseManager db, Context context) {
         BorderPane root = new BorderPane();  // doesn't have to stay borderPane
         // other stuff can go here if needed
         root.setBottom(NavBar.create(SceneType.MENU));
         return new Scene(root, 640, 480);
     }
 
-    private static Scene buildStatsScene(Stage stage, DatabaseManager db) {
+    private static Scene buildStatsScene(Stage stage, DatabaseManager db, Context context) {
         BorderPane root = new BorderPane();  // doesn't have to stay borderPane
         // other stuff can go here if needed
         root.setBottom(NavBar.create(SceneType.MENU));
         return new Scene(root, 640, 480);
     }
 
-    private static Scene buildCreditsScene(Stage stage, DatabaseManager db) {
+    private static Scene buildCreditsScene(Stage stage, DatabaseManager db, Context context) {
         BorderPane root = new BorderPane();  // doesn't have to stay borderPane
         // other stuff can go here if needed
         root.setBottom(NavBar.create(SceneType.MENU));
@@ -88,23 +87,18 @@ public class SceneFactory {
     private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
         Button btn = new Button("Dashboard");
         Button cookiekBtn = new Button("Navigate to Cookie Scene");
-        Button fileBtn = new Button("Navigate to File Screen");
 
         btn.setOnAction(e ->
                 SceneManager.getInstance().navigateTo(SceneType.ADD_ITEM)
         );
 
         cookiekBtn.setOnAction(e ->
-                stage.setScene(CookieScene.create(stage, db))
-        );
-
-        fileBtn.setOnAction(e ->
-                stage.setScene(FileScreen.create(stage, db))
+                stage.setScene(CookieScene.create(stage))
         );
 
         VBox vBox = new VBox(10);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(btn, fileBtn, cookiekBtn);
+        vBox.getChildren().addAll(btn, cookiekBtn);
 
         return new Scene(vBox, 640, 480);
     }

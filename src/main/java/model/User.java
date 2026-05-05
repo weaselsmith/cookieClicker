@@ -8,6 +8,7 @@ public class User {
     private int maxGrandmas;
     private int maxFactories;
     private int maxWizards;
+    private String password;
 
     public User() {
     }
@@ -36,6 +37,13 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+    public void setPassword(String password){
+        this.password = password;
     }
 
     public long getHighScore() {
