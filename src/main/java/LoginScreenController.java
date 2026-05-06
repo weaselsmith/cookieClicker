@@ -3,6 +3,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import model.User;
 import java.util.List;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class LoginScreenController {
         HBox passwordRow = new HBox(10, passwordLabel, passwordField);
 
         Button loginButton = new Button("Login!");
-        TextArea newUser = new TextArea("New user? Sign up below!");
+        Text newUser = new Text("New user? Sign up below!");
         Button signUpButton = new Button("Sign up!");
 
         usernameField.setPromptText("Type username here");
