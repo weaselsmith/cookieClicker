@@ -1,9 +1,14 @@
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import model.User;
+
+import java.awt.*;
 
 public class SignUpScreenController {
 
@@ -44,6 +49,11 @@ public class SignUpScreenController {
             if (isValidInput(inputtedUsername, inputtedPassword)) {
                 if (!(isUsernameTaken(inputtedUsername, db))){
                     db.addUser(inputtedUsername, inputtedPassword);
+                    try {
+                        signUpNotification(inputtedUsername);
+                    } catch (AWTException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     SceneManager.getInstance().navigateTo(SceneType.LOGIN);
                 }
                 else{
@@ -74,6 +84,25 @@ public class SignUpScreenController {
             }
         }
         return false;
+    }
+
+    public static void signUpNotification(String username) throws AWTException {
+        if (SystemTray.isSupported()) {
+            SystemTray tray = SystemTray.getSystemTray();
+
+            Image image = Toolkit.getDefaultToolkit().createImage("/images/cookie1_new.png");
+
+            TrayIcon trayIcon = new TrayIcon(image, "Cookie Clicker");
+            trayIcon.setImageAutoSize(true);
+
+            tray.add(trayIcon);
+
+            trayIcon.displayMessage(
+                    "Cookie Clicker",
+                    "You made an account named " + username + "!",
+                    TrayIcon.MessageType.INFO
+            );
+        }
     }
 
 
