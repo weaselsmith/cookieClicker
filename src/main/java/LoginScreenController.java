@@ -37,8 +37,7 @@ public class LoginScreenController {
             String inputtedPassword = passwordField.getText();
             if (isValidInput(inputtedUsername, inputtedPassword)) {
                 User user = null;
-                List users = db.getAllUsers();
-                for (User u: users){
+                for (User u: db.getAllUsers()){
                     if (u.getName().equals(inputtedUsername)){
                         user = u;
                         break;
@@ -58,7 +57,7 @@ public class LoginScreenController {
             }
         });
 
-        //signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
+        signUpButton.setOnAction(e -> SceneManager.getInstance().navigateTo(SceneType.SIGNUP));
 
         return new Scene(root, 640, 480);
 

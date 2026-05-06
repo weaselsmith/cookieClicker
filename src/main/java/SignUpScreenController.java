@@ -3,6 +3,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import model.User;
 
 public class SignUpScreenController {
 
@@ -34,14 +35,16 @@ public class SignUpScreenController {
         signUpButton.setOnAction(e -> {
             String inputtedUsername = newName.getText();
             String inputtedPassword = newPassword.getText();
-            String inputtedConfirm = confirmPassword.getText();
+            //String inputtedConfirm = confirmPassword.getText();
 
             if (isValidInput(inputtedUsername, inputtedPassword)) {
-                if (inputtedPassword.equals(inputtedConfirm) /* && inputtedUsername not in db already*/){
+                if (!(isUsernameTaken(inputtedUsername, db))){
                     db.addUser(inputtedUsername, inputtedPassword);
                     SceneManager.getInstance().navigateTo(SceneType.LOGIN);
                 }
-
+                else{
+                    title.setText("Username already taken, try another one?");
+                }
             }
         });
         //refresh();
@@ -58,6 +61,15 @@ public class SignUpScreenController {
             return false;
         }
         return true;
+    }
+
+    public static boolean isUsernameTaken(String name, DatabaseManager db){
+        for (User u: db.getAllUsers()){
+            if (u.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
