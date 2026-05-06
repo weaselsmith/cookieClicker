@@ -1,26 +1,15 @@
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 import model.Game;
-import model.User;
-
-import java.awt.*;
-
-import static java.awt.SystemColor.text;
 
 public class FileScreen {
 
-    public static Scene create(Stage stage, DatabaseManager db) {
-
-
+    public static Scene create(Stage stage, DatabaseManager db, Context context) {
 
         Text text1 = new Text("File 1");
         text1.getStyleClass().add("bold-text");
@@ -29,55 +18,60 @@ public class FileScreen {
         Text text3 = new Text("File 3");
         text3.getStyleClass().add("bold-text");
 
+        HBox file1 = createFileBox("File 1", 1, db, context);
+        HBox file2 = createFileBox("File 2", 2, db, context);
+        HBox file3 = createFileBox("File 3", 3, db, context);
 
-        HBox file1 = new HBox();
-        file1.setAlignment(Pos.CENTER);
-        file1.setPrefSize(100,100);
-        file1.getStyleClass().addAll("hbox-bordered", "hover-box");
-        file1.getChildren().add(text1);
-        file1.setOnMouseClicked(e -> {
-            System.out.println("File 1 clicked!");
-            SceneManager.getInstance().navigateTo(SceneType.COOKIE);
-        });
+        VBox filesBox = new VBox(10, file1, file2, file3);
+        filesBox.setAlignment(Pos.CENTER);
 
-        HBox file2 = new HBox();
-        file2.setAlignment(Pos.CENTER);
-        file2.setPrefSize(100,100);
-        file2.getStyleClass().addAll("hbox-bordered", "hover-box");
-        file2.getChildren().add(text2);
-        file2.setOnMouseClicked(e -> {
-            System.out.println("File 2 clicked!");
-            SceneManager.getInstance().navigateTo(SceneType.COOKIE);
-        });
-
-
-        HBox file3 = new HBox();
-        file3.setAlignment(Pos.CENTER);
-        file3.setPrefSize(100,100);
-        file3.getStyleClass().addAll("hbox-bordered", "hover-box");
-        file3.getChildren().add(text3);
-        file3.setOnMouseClicked(e -> {
-            System.out.println("File 3 clicked!");
-            SceneManager.getInstance().navigateTo(SceneType.COOKIE);
-        });
-
-
-
-        BorderPane root = new BorderPane();
-
+        BorderPane root = new BorderPane(filesBox);
+        root.setBottom(NavBar.create(SceneType.FILE));
         root.getStylesheets().add(
                 FileScreen.class.getResource("/style.css").toExternalForm()
         );
 
-        VBox filesBox = new VBox(10);
-        filesBox.setAlignment(Pos.CENTER);
-
-        filesBox.getChildren().addAll(file1, file2, file3);
-
-        root.setCenter(filesBox);
-        root.setBottom(NavBar.create(SceneType.FILE));
-
         return new Scene(root, 640, 480);
     }
 
+    private static HBox createFileBox(String label, int slot, DatabaseManager db, Context context) {
+        Text text = new Text(label);
+        text.getStyleClass().add("bold-text");
+
+        HBox fileBox = new HBox(text);
+        fileBox.setAlignment(Pos.CENTER);
+        fileBox.setPrefSize(100, 100);
+        fileBox.getStyleClass().addAll("hbox-bordered", "hover-box");
+
+        fileBox.setOnMouseClicked(e -> {
+            System.out.println(label + " clicked!");
+
+            Game game = db.getGameByUserAndSlot(context.getUser().getId(), slot);
+
+            if (game == null) {
+                db.addGame(context.getUser().getId(), slot);
+                game = db.getLastGame();
+                System.out.println("Added game for user_id: " + context.getUser().getId() + " in slot " + slot);
+            }
+
+            if (game.getGameId() <= 0) {
+                System.err.println("Invalid game id: " + game.getGameId() + " for slot " + slot);
+                return;
+            }
+
+            System.out.println("Loaded or created game id: " + game.getGameId() + " (slot " + slot + ")");
+
+            if (context.getDriver() != null) {
+                context.getDriver().stopAutoCookies();
+            }
+
+            GameDriver driver = new GameDriver(game);
+            context.setGame(game);
+            context.setDriver(driver);
+
+            SceneManager.getInstance().navigateTo(SceneType.COOKIE);
+        });
+
+        return fileBox;
+    }
 }

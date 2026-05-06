@@ -7,8 +7,8 @@ public class SceneFactory {
         return switch (type) {
             case LOGIN -> LoginScreenController.buildScene(db, context);
             case SIGNUP -> SignUpScreenController.buildScene(db, context);
-            case FILE  -> FileScreen.create(stage, db);
-            case COOKIE -> CookieScene.create(stage, db);
+            case FILE  -> FileScreen.create(stage, db, context);
+            case COOKIE -> CookieScene.create(stage, db, context);
             case STORE -> StoreScene.create(db, context);
             case STATS -> StatsScene.create(db, context);
             case CREDITS -> buildCreditsScene(stage, db, context);

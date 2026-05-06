@@ -8,9 +8,9 @@ public class Context {
     GameDriver driver;
 
     public Context(){
-        driver = new GameDriver();
-        game = driver.getGame();
-        driver.startAutoCookies();
+        driver = null;
+        game = null;
+        driver = null;
     }
 
     public Context(User user, Game game){
@@ -32,14 +32,34 @@ public class Context {
         return game;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
-        driver.stopAutoCookies();
-        driver = new GameDriver(game);
-        driver.startAutoCookies();
-    }
+//    public void setGame(Game game) {
+//        this.game = game;
+//        driver.stopAutoCookies();
+//        driver = new GameDriver(game);
+//        driver.startAutoCookies();
+//    }
+public void setGame(Game game) {
+    this.game = game;
+}
+
 
     public GameDriver getDriver() {
         return driver;
     }
+
+    public void setDriver(GameDriver newDriver) {
+        if (this.driver != null) {
+            this.driver.stopAutoCookies();
+        }
+        this.driver = newDriver;
+
+        if (this.driver != null) {
+            this.driver.startAutoCookies();
+        }
+    }
+
+
+
+
+
 }
