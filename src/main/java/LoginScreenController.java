@@ -46,11 +46,11 @@ public class LoginScreenController {
                 }
                 if (user == null){
                     title.setText("No account found. Double check the username, or sign up!");
-                } else if (!(user.getPassword().equals(inputtedPassword))){
+                } else if (!inputtedPassword.equals(user.getPassword())) {
                     title.setText("Incorrect password, try again?");
                 } else{
                     context.setUser(user);
-                    SceneManager.getInstance().navigateTo(SceneType.COOKIE);
+                    SceneManager.getInstance().navigateTo(SceneType.FILE);
                 }
             }
             else{
