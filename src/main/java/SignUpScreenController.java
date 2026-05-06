@@ -32,6 +32,10 @@ public class SignUpScreenController {
         VBox root = new VBox(10, goBackButton, title, nameBox, passwordBox, confirmBox, signUpButton);
         root.setPadding(new Insets(16));
 
+        goBackButton.setOnAction(e -> {
+            SceneManager.getInstance().navigateTo(SceneType.LOGIN);
+        });
+
         signUpButton.setOnAction(e -> {
             String inputtedUsername = newName.getText();
             String inputtedPassword = newPassword.getText();
