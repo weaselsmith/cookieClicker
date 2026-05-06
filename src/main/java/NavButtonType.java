@@ -1,7 +1,7 @@
 public enum NavButtonType {
-    MENU("menu", SceneType.MENU),
-    FILE("game", SceneType.FILE), //edited by Daniel
-    STORE("store", SceneType.STORE),
+    FILE("load", SceneType.FILE),
+    COOKIE("click", SceneType.COOKIE),
+    STORE("shop", SceneType.STORE),
     STATS("stats", SceneType.STATS),
     LOGIN("log out", SceneType.LOGIN);
 
