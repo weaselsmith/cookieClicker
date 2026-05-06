@@ -27,12 +27,19 @@ public class SignUpScreenController {
         HBox passwordBox = new HBox(newPasswordLabel, newPassword);
 
         PasswordField confirmPassword = new PasswordField();
-        confirmPassword.setPromptText("******");
+
+        confirmPassword.promptTextProperty().bind(
+                newPassword.textProperty().length().asString().map(len -> "*".repeat(Integer.parseInt(len)))
+        );
+
         Label confirmPasswordLabel = new Label("Confirm new password:");
         HBox confirmBox = new HBox(confirmPasswordLabel, confirmPassword);
 
         Button signUpButton = new Button("Sign Up!");
-        signUpButton.disableProperty().bind(newPassword.textProperty().isEqualTo(confirmPassword.textProperty()).not());
+        signUpButton.disableProperty().bind(
+                newPassword.textProperty().isEqualTo(confirmPassword.textProperty()).not()
+                        .or(newPassword.textProperty().length().lessThan(6))
+        );
 
         VBox root = new VBox(10, goBackButton, title, nameBox, passwordBox, confirmBox, signUpButton);
         root.setPadding(new Insets(16));
