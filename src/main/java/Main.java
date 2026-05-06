@@ -7,11 +7,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
+        SaveManager.init(db);
         db = new DatabaseManager();
         context = new Context();
 
 
-        SaveManager.init(db);
+
         SceneManager.init(stage, db, context);
         stage.setTitle("Cookie Clicker");
         SceneManager.getInstance().navigateTo(SceneType.LOGIN);
