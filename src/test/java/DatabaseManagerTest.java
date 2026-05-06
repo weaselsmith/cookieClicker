@@ -2,14 +2,16 @@ import model.Game;
 import model.PurchasedUpgrade;
 import model.Upgrade;
 import model.User;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.sql.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,41 +31,37 @@ class DatabaseManagerTest {
     }
 
     @Test
-    void testSchema() {
+    void testSchema() throws Exception {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:app.db")) {
             assertTrue(db.tableExists(conn, "games"));
             assertTrue(db.tableExists(conn, "users"));
             assertTrue(db.tableExists(conn, "upgrades"));
             assertTrue(db.tableExists(conn, "purchased_upgrades"));
-        } catch (Exception e) {
-            System.err.println("connection failed");
         }
     }
 
     @Test
     void testUserTable() {
-        // Create
         db.addUser("Tom", "secret");
 
-        // Read
         List<User> users = db.getAllUsers();
-        User user = users.getFirst();
+        User user = users.get(0);
 
         assertEquals("Tom", user.getName());
 
-        // Update
         User updatedUser = new User(
                 user.getId(),
                 "Tom 2",
                 9999,
                 5,
                 4,
-                3
+                3,
+                "secret"
         );
 
         db.updateUser(updatedUser);
 
-        user = db.getAllUsers().getFirst();
+        user = db.getAllUsers().get(0);
 
         assertEquals("Tom 2", user.getName());
         assertEquals(9999, user.getHighScore());
@@ -71,7 +69,6 @@ class DatabaseManagerTest {
         assertEquals(4, user.getMaxFactories());
         assertEquals(3, user.getMaxWizards());
 
-        // Delete
         db.deleteUser(user.getId());
 
         assertEquals(0, db.getAllUsers().size());
@@ -79,93 +76,106 @@ class DatabaseManagerTest {
 
     @Test
     void testGameTable() {
-        // Create
         db.addUser("Tom", "secret");
         db.addUser("Noah", "secret2");
 
-        db.addGame(1);
-        db.addGame(1);
-        db.addGame(2);
+        List<User> users = db.getAllUsers();
+        int user1Id = users.get(0).getId();
+        int user2Id = users.get(1).getId();
 
-        // Read
-        List<Game> user1Games = db.getUserGames(1);
-        List<Game> user2Games = db.getUserGames(2);
+        db.addGame(user1Id, 1);
+        db.addGame(user1Id, 2);
+        db.addGame(user2Id, 1);
+
+        List<Game> user1Games = db.getUserGames(user1Id);
+        List<Game> user2Games = db.getUserGames(user2Id);
         List<Game> allGames = db.getAllGames();
 
         assertEquals(2, user1Games.size());
         assertEquals(1, user2Games.size());
         assertEquals(3, allGames.size());
 
-        // Update
-        Game currGame = user1Games.getFirst();
-        int currGameID = currGame.getGameId();
+        Game currGame = user1Games.get(0);
+        int currGameId = currGame.getGameId();
+
         currGame.setCookies(currGame.getCookies() + 1);
         db.updateGame(currGame);
 
-        currGame = db.getGameByID(currGameID);
+        currGame = db.getGameByID(currGameId);
 
+        assertNotNull(currGame);
         assertEquals(1, currGame.getCookies());
 
-        // Delete
+        db.deleteGame(currGameId);
 
-        db.deleteGame(1);
         assertEquals(2, db.getAllGames().size());
     }
 
     @Test
-    void testUpgradeTable() {
-        // Create
+    void testPurchasedUpgradesTable() {
         db.addUser("Tom", "secret");
-        db.addGame(1);
-        int gameId = db.getAllGames().getFirst().getGameId();
+
+        int userId = db.getAllUsers().get(0).getId();
+        db.addGame(userId, 1);
+
+        int gameId = db.getAllGames().get(0).getGameId();
 
         List<Upgrade> upgrades = db.getAllUpgrades();
-        Upgrade firstUpgrade = upgrades.getFirst();
+        Upgrade firstUpgrade = upgrades.get(0);
 
         db.addPurchase(gameId, firstUpgrade.getUpgradeId(), firstUpgrade.getName());
 
-        // Read
-        List<PurchasedUpgrade> purchasedUpgrades = db.getAllPurchasedUpgradesByGameID(gameId);
-        PurchasedUpgrade purchase = purchasedUpgrades.getFirst();
+        List<PurchasedUpgrade> purchasedUpgrades =
+                db.getAllPurchasedUpgradesByGameID(gameId);
+
+        PurchasedUpgrade purchase = purchasedUpgrades.get(0);
+
         assertEquals(firstUpgrade.getName(), purchase.getName());
+        assertEquals(firstUpgrade.getUpgradeId(), purchase.getUpgradeId());
 
-        // Update
-        PurchasedUpgrade newPurchase = new PurchasedUpgrade(purchase.getPurchaseId(), purchase.getGameId(), purchase.getGameId(), "changed name");
-        db.updatePurchasedUpgrade(newPurchase);
+        PurchasedUpgrade updatedPurchase = new PurchasedUpgrade(
+                purchase.getPurchaseId(),
+                purchase.getGameId(),
+                purchase.getUpgradeId(),
+                "changed name"
+        );
 
-        PurchasedUpgrade modifiedPurchase = db.getAllPurchasedUpgradesByGameID(gameId).getFirst();
+        db.updatePurchasedUpgrade(updatedPurchase);
+
+        PurchasedUpgrade modifiedPurchase =
+                db.getAllPurchasedUpgradesByGameID(gameId).get(0);
 
         assertEquals("changed name", modifiedPurchase.getName());
 
-        // Delete
         db.deletePurchasedUpgrade(modifiedPurchase.getPurchaseId());
 
         assertEquals(0, db.getAllPurchasedUpgrades().size());
     }
 
     @Test
-    void testPurchasedUpgradesTable() {
-        // Create
-        int size = db.getAllUpgrades().size();
+    void testUpgradeTable() {
+        int originalSize = db.getAllUpgrades().size();
+
         db.addUpgrade("Test Upgrade", 100, "grandma");
+
         List<Upgrade> upgrades = db.getAllUpgrades();
-        Upgrade newUpgrade = upgrades.getLast();
+        Upgrade newUpgrade = upgrades.get(upgrades.size() - 1);
+
+        assertEquals(originalSize + 1, upgrades.size());
         assertEquals("Test Upgrade", newUpgrade.getName());
+        assertEquals(100, newUpgrade.getCost());
+        assertEquals("grandma", newUpgrade.getCategory());
 
-        // Read
-        assertEquals(10, size + 1);
-
-        // Update
-        db.updateUpgradePrice(newUpgrade.getUpgradeId(), 100);
+        db.updateUpgradePrice(newUpgrade.getUpgradeId(), 200);
 
         Upgrade modifiedUpgrade = db.getUpgradeByID(newUpgrade.getUpgradeId());
 
-        assertEquals(100, modifiedUpgrade.getCost());
+        assertNotNull(modifiedUpgrade);
+        assertEquals(200, modifiedUpgrade.getCost());
 
-        // Delete
         db.deleteUpgrade(modifiedUpgrade.getUpgradeId());
 
-        assertEquals(size, db.getAllUpgrades().size());
+        assertEquals(originalSize, db.getAllUpgrades().size());
     }
 
     @Test
@@ -173,18 +183,22 @@ class DatabaseManagerTest {
         db.addUpgrade("Test Upgrade", 100, "grandma");
 
         List<Upgrade> upgrades = db.getAllUpgrades();
+        Upgrade lastUpgrade = upgrades.get(upgrades.size() - 1);
 
-        assertEquals("Test Upgrade", upgrades.getLast().getName());
+        assertEquals("Test Upgrade", lastUpgrade.getName());
     }
 
     @Test
     void addGame() {
         db.addUser("Tom", "secret");
-        List<User> users = db.getAllUsers();
-        db.addGame(users.getFirst().getId());
+
+        User user = db.getAllUsers().get(0);
+
+        db.addGame(user.getId(), 1);
+
         List<Game> games = db.getAllGames();
 
         assertEquals(1, games.size());
-        assertEquals(0, games.getFirst().getCookies());
+        assertEquals(0, games.get(0).getCookies());
     }
 }
