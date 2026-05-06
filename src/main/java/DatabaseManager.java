@@ -58,6 +58,7 @@ public class DatabaseManager {
                 CREATE TABLE IF NOT EXISTS games (
                     game_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER,
+                    slot INTEGER NOT NULL,
                     cookies INTEGER NOT NULL DEFAULT 0,
                     num_grandmas INTEGER NOT NULL DEFAULT 0,
                     num_factories INTEGER NOT NULL DEFAULT 0,
@@ -166,6 +167,23 @@ public class DatabaseManager {
         }
     }
 
+    public Game getGameByUserAndSlot(int userId, int slot) {
+        String sql = "SELECT * FROM games WHERE user_id = ? AND slot = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, slot);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return createGameFromResultSet(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("getGameByUserAndSlot failed: " + e.getMessage());
+        }
+        return null;
+    }
+
+
     public void addUpgrade(String name, int cost, String category) {
         String sql = "INSERT INTO upgrades (name, cost, category) VALUES (?, ?, ?)";
 
@@ -254,17 +272,30 @@ public class DatabaseManager {
         }
     }
 
-    public void addGame(int userId) {
-        String sql = "INSERT INTO games (user_id) VALUES (?)";
+//    public void addGame(int userId) {
+//        String sql = "INSERT INTO games (user_id) VALUES (?)";
+//
+//        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+//            pstmt.setInt(1, userId);
+//            pstmt.executeUpdate();
+//            System.out.println("Added game for user_id: " + userId);
+//        } catch (SQLException e) {
+//            System.err.println("addGame failed: " + e.getMessage());
+//        }
+//    }
 
+    public void addGame(int userId, int slot) {
+        String sql = "INSERT INTO games (user_id, slot) VALUES (?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, userId);
+            pstmt.setInt(2, slot);
             pstmt.executeUpdate();
-            System.out.println("Added game for user_id: " + userId);
+            System.out.println("Added game for user_id " + userId + " in slot " + slot);
         } catch (SQLException e) {
             System.err.println("addGame failed: " + e.getMessage());
         }
     }
+
 
     public List<Game> getAllGames() {
         List<Game> games = new ArrayList<>();

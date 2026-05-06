@@ -20,8 +20,7 @@ public class GameDriver {
     private Game tuple;
     private long cookies;
     private final SaveManager saveMan;
-    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-
+    private ScheduledExecutorService executor;
     /**
      * Constructor for new game
      * initializes fresh unit classes
@@ -35,7 +34,7 @@ public class GameDriver {
         this.cookies = 0;
         this.tuple = new Game();
         this.saveMan = SaveManager.getInstance();
-        AutoSaveScheduler.start(tuple);
+        //AutoSaveScheduler.start(tuple);
     }
 
     /**
@@ -52,7 +51,7 @@ public class GameDriver {
         this.wizards = new Wizards(tuple);
         this.cookies = tuple.getCookies();
         this.saveMan = SaveManager.getInstance();
-        AutoSaveScheduler.start(tuple);
+        //AutoSaveScheduler.start(tuple);
     }
 
 
@@ -68,7 +67,24 @@ public class GameDriver {
      * schedules an addition of cookies made by units once every second
      */
     public void startAutoCookies() {
-        scheduler.scheduleAtFixedRate(this::countAutoCookies, 0, 1, TimeUnit.SECONDS);
+        stopAutoCookies();
+        executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleAtFixedRate(() -> {
+            countAutoCookies();
+            saveMan.saveGame(tuple);
+            System.out.println("Updated game with id: " + tuple.getGameId());
+            System.out.println("Game object ref: " + tuple + ", id: " + tuple.getGameId());
+
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+    public void stopAutoCookies() {
+        if (executor != null && !executor.isShutdown()) {
+            executor.shutdownNow();
+            try {
+                executor.awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException ignored) {}
+            System.out.println("Stopped auto cookies for game id: " + tuple.getGameId());
+        }
     }
 
     private void countAutoCookies() {
@@ -76,9 +92,6 @@ public class GameDriver {
         tuple.setCookies(this.cookies);
     }
 
-    public void stopAutoCookies() {
-        scheduler.shutdown();
-    }
 
     public void addCookie() {
         this.cookies++;

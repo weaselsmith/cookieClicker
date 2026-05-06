@@ -16,10 +16,10 @@ import java.awt.*;
 
 public class CookieScene {
 
-    private static int counter = 0;
+    public static Scene create(Stage stage, DatabaseManager db, Context context) {
 
-
-    public static Scene create(Stage stage, DatabaseManager db) {
+        GameDriver driver = context.getDriver();
+        Game game = context.getGame();
 
 
         Text counterText = new Text("Score: 0");
@@ -34,8 +34,9 @@ public class CookieScene {
         cookieButton.setGraphic(cookieView);
         cookieButton.setStyle("-fx-background-color: transparent;");
         cookieButton.setOnAction(e -> {
-            //db.updateGame();
-            counterText.setText("Score: " + counter++);
+            driver.addCookie();
+            counterText.setText("Score: " + driver.getCookies());
+            db.updateGame(game);
         });
 
 
