@@ -14,13 +14,14 @@ public class User {
     }
 
     public User(int id, String name, long highScore,
-                int maxGrandmas, int maxFactories, int maxWizards) {
+                int maxGrandmas, int maxFactories, int maxWizards, String password) {
         this.id = id;
         this.name = name;
         this.highScore = highScore;
         this.maxGrandmas = maxGrandmas;
         this.maxFactories = maxFactories;
         this.maxWizards = maxWizards;
+        this.password = password;
     }
 
     public int getId() {
