@@ -374,7 +374,7 @@ public class DatabaseManager {
 
     public void addUser(String name, String password) {
         String sql = "INSERT INTO users (name, password) VALUES (?, ?)";
-
+        System.out.println("Storing values: " + name + " and  " + password);
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, name);
             pstmt.setString(2, password);
@@ -398,7 +398,8 @@ public class DatabaseManager {
                         rs.getInt("high_score"),
                         rs.getInt("max_grandmas"),
                         rs.getInt("max_factories"),
-                        rs.getInt("max_wizards")
+                        rs.getInt("max_wizards"),
+                        rs.getString("password")
                 );
 
                 users.add(user);
