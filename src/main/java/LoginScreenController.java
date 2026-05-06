@@ -3,6 +3,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import model.User;
+import java.util.List;
+import java.util.ArrayList;
 
 public class LoginScreenController {
 
@@ -33,14 +36,22 @@ public class LoginScreenController {
             String inputtedUsername = usernameField.getText();
             String inputtedPassword = passwordField.getText();
             if (isValidInput(inputtedUsername, inputtedPassword)) {
-                //TODO check if login info is successful
-                //if (login info is successful) {
-                //     pass in user info
-                //     SceneManager.getInstance().navigateTo(SceneType.COOKIE);
-                //}
-                //else {
-                //      title.setText("Invalid login information, try again");
-                //}
+                User user = null;
+                List users = db.getAllUsers();
+                for (User u: users){
+                    if (u.getName().equals(inputtedUsername)){
+                        user = u;
+                        break;
+                    }
+                }
+                if (user == null){
+                    title.setText("No account found. Double check the username, or sign up!");
+                } else if (!(user.getPassword().equals(inputtedPassword))){
+                    title.setText("Incorrect password, try again?");
+                } else{
+                    context.setUser(user);
+                    SceneManager.getInstance().navigateTo(SceneType.COOKIE);
+                }
             }
             else{
                 title.setText("Please make sure you input a valid username and password.");
