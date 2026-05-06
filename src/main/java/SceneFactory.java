@@ -9,24 +9,10 @@ public class SceneFactory {
             case SIGNUP -> SignUpScreenController.buildScene(db, context);
             case FILE  -> FileScreen.create(stage, db);
             case COOKIE -> CookieScene.create(stage, db);
-            case STORE -> buildStoreScene(stage, db, context);
-            case STATS -> buildStatsScene(stage, db, context);
+            case STORE -> StoreScene.create(db, context);
+            case STATS -> StatsScene.create(db, context);
             case CREDITS -> buildCreditsScene(stage, db, context);
         };
-    }
-
-    private static Scene buildStoreScene(Stage stage, DatabaseManager db, Context context) {
-        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
-        // other stuff can go here if needed
-        root.setBottom(NavBar.create(SceneType.STORE));
-        return new Scene(root, 640, 480);
-    }
-
-    private static Scene buildStatsScene(Stage stage, DatabaseManager db, Context context) {
-        BorderPane root = new BorderPane();  // doesn't have to stay borderPane
-        // other stuff can go here if needed
-        root.setBottom(NavBar.create(SceneType.STATS));
-        return new Scene(root, 640, 480);
     }
 
     private static Scene buildCreditsScene(Stage stage, DatabaseManager db, Context context) {
