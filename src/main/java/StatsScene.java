@@ -4,10 +4,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Game;
+import model.PurchasedUpgrade;
+import model.Upgrade;
 import model.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class StatsScene {
 
@@ -22,19 +28,26 @@ public class StatsScene {
         Label userLabel = new Label("User: " + user.getName());
         userLabel.setStyle("-fx-font-size: 14px;");
 
+        List<Upgrade> allUpgrades = db.getAllUpgrades();
+        List<PurchasedUpgrade> purchasedUpgrades =
+                db.getAllPurchasedUpgradesByGameID(game.getGameId());
+
         HBox grandmaRow = createStatRow(
                 "/images/Grandma.png",
-                "You have " + game.getNumGrandmas() + " grandmas"
+                "You have " + game.getNumGrandmas() + " " +
+                        getUpgradePrefix(allUpgrades, purchasedUpgrades, "grandma") + "Grandmas"
         );
 
         HBox factoryRow = createStatRow(
                 "/images/Factory.png",
-                "You have " + game.getNumFactories() + " factories"
+                "You have " + game.getNumFactories() + " " +
+                        getUpgradePrefix(allUpgrades, purchasedUpgrades, "factory") + "Factories"
         );
 
         HBox wizardRow = createStatRow(
                 "/images/Wizard.jpeg",
-                "You have " + game.getNumWizards() + " wizards"
+                "You have " + game.getNumWizards() + " " +
+                        getUpgradePrefix(allUpgrades, purchasedUpgrades, "wizard") + "Wizards"
         );
 
         int cps = (int) driver.calculateCps();
@@ -42,14 +55,18 @@ public class StatsScene {
         Label cpsLabel = new Label("Your Cookie Power is " + cps);
         cpsLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
+        // NEW LINE (total cookies)
+        Label totalCookiesLabel = new Label("You have " + game.getCookies() + " cookies");
+        totalCookiesLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
         Label titleLabel = new Label("You are a Cookie " + getTitle(game.getCookies()));
         titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-        VBox bottomBox = new VBox(12, cpsLabel, titleLabel);
+        VBox bottomBox = new VBox(12, cpsLabel, totalCookiesLabel, titleLabel);
         bottomBox.setAlignment(Pos.CENTER);
         bottomBox.setPadding(new Insets(16, 0, 0, 0));
 
-        VBox root = new VBox(
+        VBox content = new VBox(
                 8,
                 title,
                 userLabel,
@@ -59,10 +76,47 @@ public class StatsScene {
                 bottomBox
         );
 
-        root.setPadding(new Insets(10));
-        root.setAlignment(Pos.TOP_CENTER);
+        content.setPadding(new Insets(10));
+        content.setAlignment(Pos.TOP_CENTER);
 
-        return new Scene(root, 640, 480);
+        BorderPane root = new BorderPane();
+        root.getStylesheets().add(
+                StatsScene.class.getResource("/style.css").toExternalForm()
+        );
+
+        root.setCenter(content);
+        root.setBottom(NavBar.create(SceneType.STATS));
+
+        return new Scene(root, 640, 700);
+    }
+
+    private static String getUpgradePrefix(
+            List<Upgrade> allUpgrades,
+            List<PurchasedUpgrade> purchasedUpgrades,
+            String category
+    ) {
+        String prefix = purchasedUpgrades.stream()
+                .filter(purchase -> isPurchaseInCategory(purchase, allUpgrades, category))
+                .map(PurchasedUpgrade::getName)
+                .collect(Collectors.joining(", "));
+
+        if (prefix.isEmpty()) {
+            return "";
+        }
+
+        return prefix + " ";
+    }
+
+    private static boolean isPurchaseInCategory(
+            PurchasedUpgrade purchase,
+            List<Upgrade> allUpgrades,
+            String category
+    ) {
+        return allUpgrades.stream()
+                .anyMatch(upgrade ->
+                        upgrade.getUpgradeId() == purchase.getUpgradeId()
+                                && upgrade.getCategory().equalsIgnoreCase(category)
+                );
     }
 
     private static HBox createStatRow(String imagePath, String text) {
